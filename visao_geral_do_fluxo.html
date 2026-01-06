@@ -1,0 +1,520 @@
+<!doctype html>
+<html class="no-js" lang="pt-BR">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Índice" href="genindex.html" /><link rel="search" title="Buscar" href="search.html" /><link rel="next" title="fluxo_reftek" href="fluxo_reftek.html" /><link rel="prev" title="guia_operador" href="guia_operador.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>Visão geral do fluxo - documentação SYNC - Sincronização SDS 0.1.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">documentação SYNC - Sincronização SDS 0.1.0</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">documentação SYNC - Sincronização SDS 0.1.0</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Buscar" name="q" aria-label="Buscar">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="guia_rapido.html">Guia rápido</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guia_operador.html">guia_operador</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Visão geral do fluxo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxo_reftek.html">fluxo_reftek</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxo_raspberry.html">fluxo_raspberry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="estrutura_diretorios.html">estrutura_diretorios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flags_cli.html">flags_cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logs_e_rastreabilidade.html">logs_e_rastreabilidade</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencias.html">dependencias</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="visao-geral-do-fluxo">
+<h1>Visão geral do fluxo<a class="headerlink" href="#visao-geral-do-fluxo" title="Link permanente para este cabeçalho">#</a></h1>
+<p>O <code class="docutils literal notranslate"><span class="pre">SYNC.sh</span></code> é o fluxo principal para <strong>sincronizar</strong> e <strong>publicar</strong> dados de estações <strong>REFTEK RT130</strong> e <strong>Raspberry Shake</strong> na estrutura <strong>SDS (SeisComP)</strong>, com <strong>seleção automática do pacote</strong> de dados a processar e <strong>rastreabilidade via logs</strong>.</p>
+<hr class="docutils" />
+<section id="estrutura-de-diretorios-e-entradas">
+<h2>1) Estrutura de diretórios e entradas<a class="headerlink" href="#estrutura-de-diretorios-e-entradas" title="Link permanente para este cabeçalho">#</a></h2>
+<p>O <code class="docutils literal notranslate"><span class="pre">SYNC.sh</span></code> trabalha a partir do diretório base:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">base_dir</span> <span class="pre">=</span> <span class="pre">$HOME/TMP/SYNC</span></code></p></li>
+</ul>
+<p>Principais subdiretórios usados pelo fluxo:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ZIP/&lt;ESTACAO&gt;/</span></code>
+Entrada: arquivos compactados (<code class="docutils literal notranslate"><span class="pre">.zip</span></code>, <code class="docutils literal notranslate"><span class="pre">.zip.bz2</span></code>, <code class="docutils literal notranslate"><span class="pre">.rar</span></code>, <code class="docutils literal notranslate"><span class="pre">.tar</span></code>) por estação.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PARFILES/</span></code>
+Templates de parfile: <code class="docutils literal notranslate"><span class="pre">PARFILES/&lt;ESTACAO&gt;_parfile.txt</span></code> (usado para validar o parfile gerado).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python/rt2ms_py3/</span></code>
+Conversor REFTEK binário → miniSEED (via <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">rt2ms_py3.rt2ms_py3</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOGS/</span></code>
+Saída: logs do processo (<code class="docutils literal notranslate"><span class="pre">*_sync.log</span></code>, <code class="docutils literal notranslate"><span class="pre">*_r2m.log</span></code>) e anexos (ex.: <code class="docutils literal notranslate"><span class="pre">RT130_*.log</span></code>).</p></li>
+</ul>
+<p>Saída operacional (por execução):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">base_dir/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;/</span></code> (diretório de trabalho da sincronização)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">base_dir/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;/sds/</span></code> (SDS gerada localmente antes do <code class="docutils literal notranslate"><span class="pre">workthisout</span></code>)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="execucao-modo-interativo-e-modo-por-flags">
+<h2>2) Execução: modo interativo e modo por flags<a class="headerlink" href="#execucao-modo-interativo-e-modo-por-flags" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="modo-interativo">
+<h3>Modo interativo<a class="headerlink" href="#modo-interativo" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Ao executar sem argumentos, o script lista combinações <strong>Projeto/Estação</strong> e o usuário escolhe um item. O script determina:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">project_code</span></code> (código de rede SDS: <code class="docutils literal notranslate"><span class="pre">BC</span></code>, <code class="docutils literal notranslate"><span class="pre">BL</span></code>, <code class="docutils literal notranslate"><span class="pre">IT</span></code>, <code class="docutils literal notranslate"><span class="pre">MC</span></code>, <code class="docutils literal notranslate"><span class="pre">SP</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">das_code</span></code> (DAS/serial ou código de origem)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">station_type</span></code> (<code class="docutils literal notranslate"><span class="pre">reftek</span></code> ou <code class="docutils literal notranslate"><span class="pre">raspberry</span></code>)</p></li>
+</ul>
+</section>
+<section id="modo-por-flags">
+<h3>Modo por flags<a class="headerlink" href="#modo-por-flags" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Também é possível executar diretamente com:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">&quot;PROJETO&quot;</span></code> e <code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">&quot;ESTACAO&quot;</span></code> para pular o menu</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-y</span> <span class="pre">ANO</span></code> para forçar o ano usado ao buscar o último sincronizado na SDS</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span></code> para forçar a sincronização (ignora último dia sincronizado)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="determinar-o-ultimo-dia-sincronizado-na-sds">
+<h2>3) Determinar o “último dia sincronizado” na SDS<a class="headerlink" href="#determinar-o-ultimo-dia-sincronizado-na-sds" title="Link permanente para este cabeçalho">#</a></h2>
+<p>O script precisa saber <strong>a partir de qual dia</strong> deve procurar dados novos no pacote.</p>
+<p>Regra padrão (sem <code class="docutils literal notranslate"><span class="pre">-y</span></code> e sem <code class="docutils literal notranslate"><span class="pre">-f</span></code>):</p>
+<ol class="arabic simple">
+<li><p>tenta ano atual (<code class="docutils literal notranslate"><span class="pre">date</span> <span class="pre">+%Y</span></code>)</p></li>
+<li><p>se não houver SDS, tenta ano anterior</p></li>
+</ol>
+<p>A busca é feita no caminho:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/SDS/&lt;ANO&gt;/&lt;project_code&gt;/&lt;ESTACAO&gt;/HHZ.D/</span></code></p></li>
+</ul>
+<p>O “último dia” é obtido a partir do sufixo <code class="docutils literal notranslate"><span class="pre">JJJ</span></code> dos arquivos <code class="docutils literal notranslate"><span class="pre">*.D.&lt;YYYY&gt;.&lt;JJJ&gt;</span></code>.</p>
+<p>Modos especiais:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span></code> (força): define <code class="docutils literal notranslate"><span class="pre">ultimo_sinc=0</span></code> (ignora SDS - Utilizado para testar o fluxo de sincronização em uma coleta já sincronizada)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-y</span> <span class="pre">ANO</span></code>: obriga a busca do último sincronizado no ano informado (Era utilizado quando a busca não tentava ano anterior, hoje não é tão necessário)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="selecao-automatica-do-pacote-arquivo-compactado">
+<h2>4) Seleção automática do pacote (arquivo compactado)<a class="headerlink" href="#selecao-automatica-do-pacote-arquivo-compactado" title="Link permanente para este cabeçalho">#</a></h2>
+<p>O script varre <code class="docutils literal notranslate"><span class="pre">ZIP/&lt;ESTACAO&gt;/</span></code> e avalia cada arquivo compactado suportado:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.zip</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.zip.bz2</span></code> (é descompactado para cache em <code class="docutils literal notranslate"><span class="pre">_ARCHIVE_CACHE/</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.rar</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.tar</span></code></p></li>
+</ul>
+<p>Para cada arquivo, ele lista as <strong>datas internas</strong> disponíveis e decide se há dados <strong>≥ ultimo_sinc</strong>.</p>
+<section id="raspberry-shake-interno-do-zip">
+<h3>Raspberry Shake (interno do ZIP)<a class="headerlink" href="#raspberry-shake-interno-do-zip" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Busca paths como:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/data/archive/&lt;YYYY&gt;/AM/&lt;das_code&gt;/EH[ZEN].D/...</span></code></p></li>
+</ul>
+<p>Dessas entradas extrai pares <code class="docutils literal notranslate"><span class="pre">YYYYJJJ</span></code> (ano + dia juliano).</p>
+</section>
+<section id="reftek-interno-do-zip-rar-tar">
+<h3>REFTEK (interno do ZIP/RAR/TAR)<a class="headerlink" href="#reftek-interno-do-zip-rar-tar" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Procura por pastas no padrão:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">YYYYJJJ/&lt;DAS_CODE&gt;/0</span></code> e <code class="docutils literal notranslate"><span class="pre">YYYYJJJ/&lt;DAS_CODE&gt;/1</span></code></p></li>
+</ul>
+<p>Suporta <code class="docutils literal notranslate"><span class="pre">das_code</span></code> com múltiplos códigos (ex.: <code class="docutils literal notranslate"><span class="pre">&quot;AD20</span> <span class="pre">9789&quot;</span></code>), construindo um <code class="docutils literal notranslate"><span class="pre">code_pattern</span></code>.</p>
+</section>
+<section id="criterio-de-escolha-do-closest">
+<h3>Critério de escolha do “closest”<a class="headerlink" href="#criterio-de-escolha-do-closest" title="Link permanente para este cabeçalho">#</a></h3>
+<p>O pacote escolhido é aquele cujo <strong>primeiro dia novo</strong> (≥ <code class="docutils literal notranslate"><span class="pre">ultimo_sinc</span></code>) tem o menor “diff” em relação ao último sincronizado.
+Em empate, prefere o arquivo com <strong>maior último dia</strong> disponível.</p>
+<p>Ao final, o script imprime:</p>
+<ul class="simple">
+<li><p>arquivo escolhido</p></li>
+<li><p>primeiro dia (YYYYJJJ + data gregoriana)</p></li>
+<li><p>último dia (YYYYJJJ + data gregoriana)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="processamento-e-publicacao-no-sds">
+<h2>5) Processamento e publicação no SDS<a class="headerlink" href="#processamento-e-publicacao-no-sds" title="Link permanente para este cabeçalho">#</a></h2>
+<p>A execução bifurca por <code class="docutils literal notranslate"><span class="pre">station_type</span></code>.</p>
+<section id="reftek-rt130">
+<h3>5.1) REFTEK (RT130)<a class="headerlink" href="#reftek-rt130" title="Link permanente para este cabeçalho">#</a></h3>
+<section id="a-atalho-zip-ja-contem-sds">
+<h4>(A) Atalho: ZIP já contém <code class="docutils literal notranslate"><span class="pre">/sds/</span></code><a class="headerlink" href="#a-atalho-zip-ja-contem-sds" title="Link permanente para este cabeçalho">#</a></h4>
+<p>Se o arquivo compactado já contém miniSEED/SDS (paths com <code class="docutils literal notranslate"><span class="pre">/sds/</span></code>), o script:</p>
+<ol class="arabic simple">
+<li><p>extrai os miniSEED em <code class="docutils literal notranslate"><span class="pre">target_dir/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_MSEED/</span></code></p></li>
+<li><p>publica via <code class="docutils literal notranslate"><span class="pre">dataselect</span></code> para <code class="docutils literal notranslate"><span class="pre">target_dir/sds/</span></code></p></li>
+<li><p>executa <code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code> e <code class="docutils literal notranslate"><span class="pre">workthisout.sh</span></code></p></li>
+</ol>
+<p>Esse caminho pula a conversão binária.</p>
+</section>
+<section id="b-fluxo-padrao-binario-miniseed-sds">
+<h4>(B) Fluxo padrão (binário → miniSEED → SDS)<a class="headerlink" href="#b-fluxo-padrao-binario-miniseed-sds" title="Link permanente para este cabeçalho">#</a></h4>
+<p>Quando o pacote contém binários:</p>
+<ol class="arabic simple">
+<li><p>Extrai o pacote para <code class="docutils literal notranslate"><span class="pre">target_dir</span></code></p></li>
+<li><p>Move somente o conteúdo a partir de <code class="docutils literal notranslate"><span class="pre">YYYYJJJ/DAS_CODE/</span></code> para:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">binary_dir</span> <span class="pre">=</span> <span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_BINARIES/</span></code></p></li>
+</ul>
+</li>
+<li><p>Checagem de integridade horária:</p>
+<ul class="simple">
+<li><p>varre diretórios <code class="docutils literal notranslate"><span class="pre">*/&lt;DAS_CODE&gt;/1/</span></code> e verifica se há <strong>24 arquivos</strong> (uma hora por arquivo)</p></li>
+<li><p>bordas (primeiro/último dia da coleta) são tratadas separadamente</p></li>
+</ul>
+</li>
+<li><p>Extrai e ordena informações:</p>
+<ul class="simple">
+<li><p>GPS e bateria a partir de arquivos em <code class="docutils literal notranslate"><span class="pre">*/&lt;DAS_CODE&gt;/0/*</span></code></p></li>
+<li><p>gera <code class="docutils literal notranslate"><span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;.gps</span></code> e <code class="docutils literal notranslate"><span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;.battery</span></code></p></li>
+</ul>
+</li>
+<li><p>Conversão para miniSEED (rt2ms_py3):</p>
+<ul class="simple">
+<li><p>roda modo exploratório (<code class="docutils literal notranslate"><span class="pre">-e</span></code>) para gerar <code class="docutils literal notranslate"><span class="pre">parfile.txt</span></code> e <code class="docutils literal notranslate"><span class="pre">rt2ms.msg</span></code></p></li>
+<li><p>resume substituições automáticas detectadas em <code class="docutils literal notranslate"><span class="pre">rt2ms.msg</span></code> (netcode/canal)</p></li>
+</ul>
+</li>
+<li><p>Validação de <code class="docutils literal notranslate"><span class="pre">parfile.txt</span></code>:</p>
+<ul class="simple">
+<li><p>compara com <code class="docutils literal notranslate"><span class="pre">PARFILES/&lt;ESTACAO&gt;_parfile.txt</span></code> (tolerâncias controladas; ex.: HHN↔HH1, HHE↔HH2)</p></li>
+</ul>
+</li>
+<li><p>Conversão final e publicação:</p>
+<ul class="simple">
+<li><p>gera <code class="docutils literal notranslate"><span class="pre">&lt;NET&gt;.&lt;ESTACAO&gt;.MSEED/</span></code></p></li>
+<li><p>executa <code class="docutils literal notranslate"><span class="pre">dataselect</span></code> + <code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code> + <code class="docutils literal notranslate"><span class="pre">workthisout.sh</span></code></p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<section id="raspberry-shake">
+<h3>5.2) Raspberry Shake<a class="headerlink" href="#raspberry-shake" title="Link permanente para este cabeçalho">#</a></h3>
+<ol class="arabic simple">
+<li><p>Lista no ZIP apenas arquivos com dia <strong>≥ ultimo_sinc</strong></p></li>
+<li><p>Extrai miniSEED para <code class="docutils literal notranslate"><span class="pre">MSEED_DIR</span></code></p></li>
+<li><p>Renomeia canais <code class="docutils literal notranslate"><span class="pre">EHZ/EHN/EHE</span></code> → <code class="docutils literal notranslate"><span class="pre">HHZ/HHN/HHE</span></code> e ajusta header com <code class="docutils literal notranslate"><span class="pre">msmod</span></code></p></li>
+<li><p>Publica no SDS com:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dataselect</span></code> → <code class="docutils literal notranslate"><span class="pre">target_dir/sds/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workthisout.sh</span></code></p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="logs-e-rastreabilidade">
+<h2>6) Logs e rastreabilidade<a class="headerlink" href="#logs-e-rastreabilidade" title="Link permanente para este cabeçalho">#</a></h2>
+<p>No início, o script abre um log em <code class="docutils literal notranslate"><span class="pre">LOGS/test.log</span></code> e redireciona stdout/stderr para o log.</p>
+<p>Ao final, ele consolida informações e renomeia o log para:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LOGS/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_&lt;HHMM&gt;_sync.log</span></code></p></li>
+</ul>
+<p>No log final também entram:</p>
+<ul class="simple">
+<li><p>MD5 do arquivo de entrada (pacote escolhido)</p></li>
+<li><p>tamanho do pacote</p></li>
+<li><p>tamanho do <code class="docutils literal notranslate"><span class="pre">target_dir/sds</span></code></p></li>
+</ul>
+<p>Além disso:</p>
+<ul class="simple">
+<li><p>move <code class="docutils literal notranslate"><span class="pre">RT130_*.log</span></code> gerados durante o processo para <code class="docutils literal notranslate"><span class="pre">LOGS/</span></code> com o mesmo prefixo do <code class="docutils literal notranslate"><span class="pre">_sync.log</span></code></p></li>
+<li><p>renomeia o log do dataselect/rt2ms (quando existir) para <code class="docutils literal notranslate"><span class="pre">*_r2m.log</span></code></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="proximos-detalhes">
+<h2>7) Próximos detalhes<a class="headerlink" href="#proximos-detalhes" title="Link permanente para este cabeçalho">#</a></h2>
+<p>Os detalhes específicos de cada tipo de estação ficam nas páginas:</p>
+<ul class="simple">
+<li><p>Fluxo REFTEK (RT130)</p></li>
+<li><p>Fluxo Raspberry Shake</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="fluxo_reftek.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">fluxo_reftek</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="guia_operador.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">guia_operador</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, Gabriel Góes Rocha de Lima
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Visão geral do fluxo</a><ul>
+<li><a class="reference internal" href="#estrutura-de-diretorios-e-entradas">1) Estrutura de diretórios e entradas</a></li>
+<li><a class="reference internal" href="#execucao-modo-interativo-e-modo-por-flags">2) Execução: modo interativo e modo por flags</a><ul>
+<li><a class="reference internal" href="#modo-interativo">Modo interativo</a></li>
+<li><a class="reference internal" href="#modo-por-flags">Modo por flags</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#determinar-o-ultimo-dia-sincronizado-na-sds">3) Determinar o “último dia sincronizado” na SDS</a></li>
+<li><a class="reference internal" href="#selecao-automatica-do-pacote-arquivo-compactado">4) Seleção automática do pacote (arquivo compactado)</a><ul>
+<li><a class="reference internal" href="#raspberry-shake-interno-do-zip">Raspberry Shake (interno do ZIP)</a></li>
+<li><a class="reference internal" href="#reftek-interno-do-zip-rar-tar">REFTEK (interno do ZIP/RAR/TAR)</a></li>
+<li><a class="reference internal" href="#criterio-de-escolha-do-closest">Critério de escolha do “closest”</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#processamento-e-publicacao-no-sds">5) Processamento e publicação no SDS</a><ul>
+<li><a class="reference internal" href="#reftek-rt130">5.1) REFTEK (RT130)</a><ul>
+<li><a class="reference internal" href="#a-atalho-zip-ja-contem-sds">(A) Atalho: ZIP já contém <code class="docutils literal notranslate"><span class="pre">/sds/</span></code></a></li>
+<li><a class="reference internal" href="#b-fluxo-padrao-binario-miniseed-sds">(B) Fluxo padrão (binário → miniSEED → SDS)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#raspberry-shake">5.2) Raspberry Shake</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#logs-e-rastreabilidade">6) Logs e rastreabilidade</a></li>
+<li><a class="reference internal" href="#proximos-detalhes">7) Próximos detalhes</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/translations.js"></script>
+    <script src="_static/design-tabs.js"></script>
+    </body>
+</html>
