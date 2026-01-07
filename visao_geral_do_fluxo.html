@@ -148,7 +148,6 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">documentação SYNC - Sincronização SDS 0.1.0</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Buscar" name="q" aria-label="Buscar">
@@ -230,8 +229,9 @@
 <h2>1) Regras globais de robustez e rastreabilidade<a class="headerlink" href="#regras-globais-de-robustez-e-rastreabilidade" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="set-euo-pipefail">
 <span id="sync-strict-mode"></span><h3>1.1 <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">-euo</span> <span class="pre">pipefail</span></code><a class="headerlink" href="#set-euo-pipefail" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-strict-mode">
-<div class="code-block-caption"><span class="caption-text">Modo estrito do shell</span><a class="headerlink" href="#code-strict-mode" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-strict-mode"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-strict-mode"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Modo estrito do shell</span><a class="headerlink" href="#id1" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 </pre></div>
 </div>
@@ -246,8 +246,9 @@
 </section>
 <section id="run-cmd">
 <span id="sync-run-cmd"></span><h3>1.2 <code class="docutils literal notranslate"><span class="pre">run_cmd()</span></code><a class="headerlink" href="#run-cmd" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-run-cmd">
-<div class="code-block-caption"><span class="caption-text">Função run_cmd</span><a class="headerlink" href="#code-run-cmd" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-run-cmd"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-run-cmd"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Função run_cmd</span><a class="headerlink" href="#id2" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_cmd<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">cmd</span><span class="o">=(</span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="o">)</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">cmd</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
@@ -284,8 +285,9 @@
 <h2>2) Inventário estático: estações, DAS codes e projetos<a class="headerlink" href="#inventario-estatico-estacoes-das-codes-e-projetos" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="listas-por-tipo">
 <span id="sync-station-lists"></span><h3>2.1 Listas por tipo<a class="headerlink" href="#listas-por-tipo" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-station-lists">
-<div class="code-block-caption"><span class="caption-text">Listas de estações</span><a class="headerlink" href="#code-station-lists" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-station-lists"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-station-lists"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Listas de estações</span><a class="headerlink" href="#id3" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">declare</span><span class="w"> </span>-a<span class="w"> </span><span class="nv">reftek_stations</span><span class="o">=(</span>PRB1<span class="w"> </span>BC9<span class="w"> </span>BC4<span class="w"> </span>BCM2<span class="w"> </span>SP7<span class="w"> </span>IT1<span class="o">)</span>
 <span class="nb">declare</span><span class="w"> </span>-a<span class="w"> </span><span class="nv">raspberry_stations</span><span class="o">=(</span>MC9<span class="w"> </span>IT9<span class="o">)</span>
 </pre></div>
@@ -299,8 +301,9 @@
 </section>
 <section id="das-codes">
 <span id="sync-das-codes"></span><h3>2.2 <code class="docutils literal notranslate"><span class="pre">das_codes</span></code><a class="headerlink" href="#das-codes" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-das-codes">
-<div class="code-block-caption"><span class="caption-text">Mapa de DAS codes</span><a class="headerlink" href="#code-das-codes" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-das-codes"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-das-codes"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Mapa de DAS codes</span><a class="headerlink" href="#id4" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">declare</span><span class="w"> </span>-A<span class="w"> </span><span class="nv">das_codes</span><span class="o">=(</span>
 <span class="w">    </span><span class="o">[</span>BCM2<span class="o">]=</span>AD19
 <span class="w">    </span><span class="o">[</span>PRB1<span class="o">]=</span><span class="s2">&quot;AD20&quot;</span><span class="w">   </span><span class="c1"># suporte a múltiplos códigos: basta separar por espaço (ex: &quot;AD20 9789&quot;)</span>
@@ -326,8 +329,9 @@
 </section>
 <section id="projects-project-map">
 <span id="sync-projects"></span><h3>2.3 <code class="docutils literal notranslate"><span class="pre">projects</span></code> + <code class="docutils literal notranslate"><span class="pre">project_map</span></code><a class="headerlink" href="#projects-project-map" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-projects">
-<div class="code-block-caption"><span class="caption-text">Lista de projetos</span><a class="headerlink" href="#code-projects" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-projects"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-projects"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">Lista de projetos</span><a class="headerlink" href="#id5" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">declare</span><span class="w"> </span>-A<span class="w"> </span><span class="nv">projects</span><span class="o">=(</span>
 <span class="w">    </span><span class="o">[</span><span class="m">1</span><span class="o">]=</span><span class="s2">&quot;BAESA ENERCAN|BC4&quot;</span>
 <span class="w">    </span><span class="o">[</span><span class="m">2</span><span class="o">]=</span><span class="s2">&quot;BAESA ENERCAN|BC9&quot;</span>
@@ -340,8 +344,9 @@
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="code-project-map">
-<div class="code-block-caption"><span class="caption-text">Mapa de projetos</span><a class="headerlink" href="#code-project-map" title="Link Permanente para esse código">#</a></div>
+<p id="sync-project-map">[<a class="reference internal" href="api/sync.html#api-sync-project-map"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-project-map"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">Mapa de projetos</span><a class="headerlink" href="#id6" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">declare</span><span class="w"> </span>-A<span class="w"> </span><span class="nv">project_map</span><span class="o">=(</span>
 <span class="w">    </span><span class="o">[</span><span class="s2">&quot;BAESA ENERCAN&quot;</span><span class="o">]=</span>BC
 <span class="w">    </span><span class="o">[</span>PARAIBUNA<span class="o">]=</span>BL
@@ -367,8 +372,9 @@
 <h2>3) Variáveis globais (para compatibilidade com <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">-u</span></code>)<a class="headerlink" href="#variaveis-globais-para-compatibilidade-com-set-u" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="globais-inicializadas-com-string-vazia">
 <span id="sync-globals"></span><h3>3.1 Globais inicializadas com string vazia<a class="headerlink" href="#globais-inicializadas-com-string-vazia" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-globals">
-<div class="code-block-caption"><span class="caption-text">Globais inicializadas</span><a class="headerlink" href="#code-globals" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-globals"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-globals"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">Globais inicializadas</span><a class="headerlink" href="#id7" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PROJETO_ESCOLHIDO</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
 <span class="nv">ESTACAO_ESCOLHIDA</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
 <span class="nv">ANO_FORCADO</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
@@ -418,8 +424,9 @@
 <h2>4) Suporte a múltiplos DAS_CODE<a class="headerlink" href="#suporte-a-multiplos-das-code" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="build-code-pattern">
 <span id="sync-build-code-pattern"></span><h3>4.1 <code class="docutils literal notranslate"><span class="pre">build_code_pattern()</span></code><a class="headerlink" href="#build-code-pattern" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-build-code-pattern">
-<div class="code-block-caption"><span class="caption-text">build_code_pattern</span><a class="headerlink" href="#code-build-code-pattern" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-build-code-pattern"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-build-code-pattern"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">build_code_pattern</span><a class="headerlink" href="#id8" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>build_code_pattern<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">dc</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span>-a<span class="w"> </span>codes
@@ -444,8 +451,9 @@
 </section>
 <section id="split-das-codes">
 <span id="sync-split-das-codes"></span><h3>4.2 <code class="docutils literal notranslate"><span class="pre">split_das_codes()</span></code><a class="headerlink" href="#split-das-codes" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-split-das-codes">
-<div class="code-block-caption"><span class="caption-text">split_das_codes</span><a class="headerlink" href="#code-split-das-codes" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-split-das-codes"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-split-das-codes"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">split_das_codes</span><a class="headerlink" href="#id9" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>split_das_codes<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">dc</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
 <span class="w">    </span><span class="nv">IFS</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>-a<span class="w"> </span>_CODES_SPLIT<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dc</span><span class="s2">&quot;</span>
@@ -462,8 +470,9 @@
 <h2>5) Funções utilitárias gerais<a class="headerlink" href="#funcoes-utilitarias-gerais" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="log-debug">
 <span id="sync-log-debug"></span><h3>5.1 <code class="docutils literal notranslate"><span class="pre">log_debug()</span></code><a class="headerlink" href="#log-debug" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-log-debug">
-<div class="code-block-caption"><span class="caption-text">log_debug</span><a class="headerlink" href="#code-log-debug" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-log-debug"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-log-debug"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">log_debug</span><a class="headerlink" href="#id10" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>log_debug<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">VERBOSE</span><span class="k">:-</span><span class="nv">0</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[DEBUG] </span><span class="nv">$*</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
 </pre></div>
 </div>
@@ -472,8 +481,9 @@
 </section>
 <section id="dia-juliano">
 <span id="sync-dia-juliano"></span><h3>5.2 <code class="docutils literal notranslate"><span class="pre">dia_juliano()</span></code><a class="headerlink" href="#dia-juliano" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-dia-juliano">
-<div class="code-block-caption"><span class="caption-text">dia_juliano</span><a class="headerlink" href="#code-dia-juliano" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-dia-juliano"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-dia-juliano"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">dia_juliano</span><a class="headerlink" href="#id11" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>dia_juliano<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span>+%j<span class="p">;</span><span class="w"> </span><span class="o">}</span>
 </pre></div>
 </div>
@@ -483,8 +493,9 @@
 </section>
 <section id="is-station-in-list">
 <span id="sync-is-station-in-list"></span><h3>5.3 <code class="docutils literal notranslate"><span class="pre">is_station_in_list()</span></code><a class="headerlink" href="#is-station-in-list" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-is-station-in-list">
-<div class="code-block-caption"><span class="caption-text">is_station_in_list</span><a class="headerlink" href="#code-is-station-in-list" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-is-station-in-list"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-is-station-in-list"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">is_station_in_list</span><a class="headerlink" href="#id12" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>is_station_in_list<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">station</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">shift</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span>e
@@ -505,8 +516,9 @@
 <h2>6) Seleção Projeto/Estação (modo interativo)<a class="headerlink" href="#selecao-projeto-estacao-modo-interativo" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="seleciona-projeto-estacao">
 <span id="sync-seleciona-projeto"></span><h3>6.1 <code class="docutils literal notranslate"><span class="pre">seleciona_projeto_estacao()</span></code><a class="headerlink" href="#seleciona-projeto-estacao" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-seleciona-projeto">
-<div class="code-block-caption"><span class="caption-text">seleciona_projeto_estacao</span><a class="headerlink" href="#code-seleciona-projeto" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-seleciona-projeto"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-seleciona-projeto"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text">seleciona_projeto_estacao</span><a class="headerlink" href="#id13" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>seleciona_projeto_estacao<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">echo</span>
 <span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;→ Selecione o Projeto e Estação:&quot;</span>
@@ -578,8 +590,9 @@
 <h2>7) Determinar o último sincronizado na SDS<a class="headerlink" href="#determinar-o-ultimo-sincronizado-na-sds" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="obter-ultimo-sinc">
 <span id="sync-obter-ultimo-sinc"></span><h3>7.1 <code class="docutils literal notranslate"><span class="pre">obter_ultimo_sinc()</span></code><a class="headerlink" href="#obter-ultimo-sinc" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-obter-ultimo-sinc">
-<div class="code-block-caption"><span class="caption-text">obter_ultimo_sinc</span><a class="headerlink" href="#code-obter-ultimo-sinc" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-obter-ultimo-sinc"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-obter-ultimo-sinc"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text">obter_ultimo_sinc</span><a class="headerlink" href="#id14" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>obter_ultimo_sinc<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$FORCE_SYNC</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[</span><span class="k">$(</span>date<span class="w"> </span>+<span class="s1">&#39;%Y-%m-%d %H:%M:%S&#39;</span><span class="k">)</span><span class="s2">] [FORCE] Sincronização forçada: ignorando último dia na SDS.&quot;</span>
@@ -671,8 +684,9 @@
 <p>Esses blocos são usados pela seleção automática do pacote “closest”.</p>
 <section id="prepare-archive">
 <span id="sync-prepare-archive"></span><h3>8.1 <code class="docutils literal notranslate"><span class="pre">prepare_archive()</span></code><a class="headerlink" href="#prepare-archive" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-prepare-archive">
-<div class="code-block-caption"><span class="caption-text">prepare_archive</span><a class="headerlink" href="#code-prepare-archive" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-prepare-archive"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-prepare-archive"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-text">prepare_archive</span><a class="headerlink" href="#id15" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>prepare_archive<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="k">in</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
 <span class="w">    </span><span class="nv">ARCH_ORIG</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$in</span><span class="s2">&quot;</span>
@@ -731,8 +745,9 @@
 </section>
 <section id="list-archive-paths">
 <span id="sync-list-archive-paths"></span><h3>8.2 <code class="docutils literal notranslate"><span class="pre">list_archive_paths()</span></code><a class="headerlink" href="#list-archive-paths" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-list-archive-paths">
-<div class="code-block-caption"><span class="caption-text">list_archive_paths</span><a class="headerlink" href="#code-list-archive-paths" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-list-archive-paths"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-list-archive-paths"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-text">list_archive_paths</span><a class="headerlink" href="#id16" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>list_archive_paths<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">kind</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
@@ -760,8 +775,9 @@
 <p>A seleção do pacote depende de conseguir extrair <strong>quais dias (YYYYJJJ)</strong> existem dentro do arquivo.</p>
 <section id="raspberry-extract-dates-from-rasp">
 <span id="sync-extract-dates-rasp"></span><h3>9.1 Raspberry: <code class="docutils literal notranslate"><span class="pre">extract_dates_from_rasp()</span></code><a class="headerlink" href="#raspberry-extract-dates-from-rasp" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-extract-dates-rasp">
-<div class="code-block-caption"><span class="caption-text">extract_dates_from_rasp</span><a class="headerlink" href="#code-extract-dates-rasp" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-extract-dates-rasp"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-extract-dates-rasp"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id17">
+<div class="code-block-caption"><span class="caption-text">extract_dates_from_rasp</span><a class="headerlink" href="#id17" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>extract_dates_from_rasp<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">zip_file</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">das_code</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
@@ -785,8 +801,9 @@
 </section>
 <section id="reftek-qualquer-profundidade-extract-reftek-dates-any-depth">
 <span id="sync-extract-reftek-dates"></span><h3>9.2 REFTEK (qualquer profundidade): <code class="docutils literal notranslate"><span class="pre">extract_reftek_dates_any_depth()</span></code><a class="headerlink" href="#reftek-qualquer-profundidade-extract-reftek-dates-any-depth" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-extract-reftek-dates">
-<div class="code-block-caption"><span class="caption-text">extract_reftek_dates_any_depth</span><a class="headerlink" href="#code-extract-reftek-dates" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-extract-reftek-dates"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-extract-reftek-dates"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id18">
+<div class="code-block-caption"><span class="caption-text">extract_reftek_dates_any_depth</span><a class="headerlink" href="#id18" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>extract_reftek_dates_any_depth<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">kind</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
@@ -838,8 +855,9 @@
 <h2>10) Seleção automática do pacote “closest”<a class="headerlink" href="#selecao-automatica-do-pacote-closest" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="encontrar-closest-zip">
 <span id="sync-encontrar-closest-zip"></span><h3>10.1 <code class="docutils literal notranslate"><span class="pre">encontrar_closest_zip()</span></code><a class="headerlink" href="#encontrar-closest-zip" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-encontrar-closest-zip">
-<div class="code-block-caption"><span class="caption-text">encontrar_closest_zip</span><a class="headerlink" href="#code-encontrar-closest-zip" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-encontrar-closest-zip"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-encontrar-closest-zip"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id19">
+<div class="code-block-caption"><span class="caption-text">encontrar_closest_zip</span><a class="headerlink" href="#id19" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>encontrar_closest_zip<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">origin_dir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$base_dir</span><span class="s2">/ZIP/</span><span class="nv">$ESTACAO_ESCOLHIDA</span><span class="s2">&quot;</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">best_diff</span><span class="o">=</span><span class="m">999</span>
@@ -1010,8 +1028,9 @@
 <p>Estas funções não fazem a seleção do pacote; elas entram no <strong>fluxo REFTEK</strong> após o modo exploratório do <code class="docutils literal notranslate"><span class="pre">rt2ms</span></code>.</p>
 <section id="comparar-parfiles-com-tolerancia">
 <span id="sync-comparar-parfiles"></span><h3>11.1 <code class="docutils literal notranslate"><span class="pre">comparar_parfiles_com_tolerancia()</span></code><a class="headerlink" href="#comparar-parfiles-com-tolerancia" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-comparar-parfiles">
-<div class="code-block-caption"><span class="caption-text">comparar_parfiles_com_tolerancia</span><a class="headerlink" href="#code-comparar-parfiles" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-comparar-parfiles"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-comparar-parfiles"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id20">
+<div class="code-block-caption"><span class="caption-text">comparar_parfiles_com_tolerancia</span><a class="headerlink" href="#id20" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>comparar_parfiles_com_tolerancia<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">par_template</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">par_expl</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
@@ -1155,8 +1174,9 @@
 </section>
 <section id="resumir-auto-substituicoes-parfile">
 <span id="sync-resumir-parfiles"></span><h3>11.2 <code class="docutils literal notranslate"><span class="pre">resumir_auto_substituicoes_parfile()</span></code><a class="headerlink" href="#resumir-auto-substituicoes-parfile" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-resumir-parfiles">
-<div class="code-block-caption"><span class="caption-text">resumir_auto_substituicoes_parfile</span><a class="headerlink" href="#code-resumir-parfiles" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-resumir-parfiles"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-resumir-parfiles"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id21">
+<div class="code-block-caption"><span class="caption-text">resumir_auto_substituicoes_parfile</span><a class="headerlink" href="#id21" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>resumir_auto_substituicoes_parfile<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">msg_file</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
 <span class="w">    </span><span class="o">[[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$msg_file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="m">0</span>
@@ -1211,8 +1231,9 @@
 <h2>12) Fluxo específico: REFTEK (funções auxiliares de inspeção interna)<a class="headerlink" href="#fluxo-especifico-reftek-funcoes-auxiliares-de-inspecao-interna" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="find-reftek-dirs-stream1">
 <span id="sync-find-reftek-dirs-stream1"></span><h3>12.1 <code class="docutils literal notranslate"><span class="pre">find_reftek_dirs_stream1()</span></code><a class="headerlink" href="#find-reftek-dirs-stream1" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-find-reftek-dirs-stream1">
-<div class="code-block-caption"><span class="caption-text">find_reftek_dirs_stream1</span><a class="headerlink" href="#code-find-reftek-dirs-stream1" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-find-reftek-dirs-stream1"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-find-reftek-dirs-stream1"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id22">
+<div class="code-block-caption"><span class="caption-text">find_reftek_dirs_stream1</span><a class="headerlink" href="#id22" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find_reftek_dirs_stream1<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">root</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">shift</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span>-a<span class="w"> </span><span class="nv">codes</span><span class="o">=(</span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="o">)</span>
@@ -1235,8 +1256,9 @@
 </section>
 <section id="find-reftek-files-stream0">
 <span id="sync-find-reftek-files-stream0"></span><h3>12.2 <code class="docutils literal notranslate"><span class="pre">find_reftek_files_stream0()</span></code><a class="headerlink" href="#find-reftek-files-stream0" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-find-reftek-files-stream0">
-<div class="code-block-caption"><span class="caption-text">find_reftek_files_stream0</span><a class="headerlink" href="#code-find-reftek-files-stream0" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-find-reftek-files-stream0"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-find-reftek-files-stream0"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id23">
+<div class="code-block-caption"><span class="caption-text">find_reftek_files_stream0</span><a class="headerlink" href="#id23" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find_reftek_files_stream0<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">root</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">shift</span>
 <span class="w">    </span><span class="nb">local</span><span class="w"> </span>-a<span class="w"> </span><span class="nv">codes</span><span class="o">=(</span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="o">)</span>
@@ -1262,8 +1284,9 @@
 <h2>13) Fluxo REFTEK (visão de blocos)<a class="headerlink" href="#fluxo-reftek-visao-de-blocos" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="processar-reftek">
 <span id="sync-processar-reftek"></span><h3>13.1 <code class="docutils literal notranslate"><span class="pre">processar_reftek()</span></code><a class="headerlink" href="#processar-reftek" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-processar-reftek">
-<div class="code-block-caption"><span class="caption-text">processar_reftek</span><a class="headerlink" href="#code-processar-reftek" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-processar-reftek"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-processar-reftek"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id24">
+<div class="code-block-caption"><span class="caption-text">processar_reftek</span><a class="headerlink" href="#id24" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>processar_reftek<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">echo</span>
 <span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;→ Iniciando processamento REFTEK para estação </span><span class="nv">$ESTACAO_ESCOLHIDA</span><span class="s2">&quot;</span>
@@ -1494,8 +1517,9 @@
 <h2>14) Fluxo Raspberry Shake (visão de blocos)<a class="headerlink" href="#fluxo-raspberry-shake-visao-de-blocos" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="processar-raspberry">
 <span id="sync-processar-raspberry"></span><h3>14.1 <code class="docutils literal notranslate"><span class="pre">processar_raspberry()</span></code><a class="headerlink" href="#processar-raspberry" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-processar-raspberry">
-<div class="code-block-caption"><span class="caption-text">processar_raspberry</span><a class="headerlink" href="#code-processar-raspberry" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-processar-raspberry"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-processar-raspberry"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id25">
+<div class="code-block-caption"><span class="caption-text">processar_raspberry</span><a class="headerlink" href="#id25" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>processar_raspberry<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="nb">echo</span>
 <span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;→ Iniciando processamento RASPBERRY para estação </span><span class="nv">$ESTACAO_ESCOLHIDA</span><span class="s2">&quot;</span>
@@ -1583,8 +1607,9 @@
 <h2>15) Finalização e rastreabilidade do log<a class="headerlink" href="#finalizacao-e-rastreabilidade-do-log" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="finalizar-log">
 <span id="sync-finalizar-log"></span><h3>15.1 <code class="docutils literal notranslate"><span class="pre">finalizar_log()</span></code><a class="headerlink" href="#finalizar-log" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-finalizar-log">
-<div class="code-block-caption"><span class="caption-text">finalizar_log</span><a class="headerlink" href="#code-finalizar-log" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-finalizar-log"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-finalizar-log"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id26">
+<div class="code-block-caption"><span class="caption-text">finalizar_log</span><a class="headerlink" href="#id26" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>finalizar_log<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$log_file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">        </span><span class="nb">local</span><span class="w"> </span>sds_size
@@ -1672,8 +1697,9 @@
 <h2>16) Bloco CONFIG + MAIN (controle do fluxo)<a class="headerlink" href="#bloco-config-main-controle-do-fluxo" title="Link permanente para este cabeçalho">#</a></h2>
 <section id="configuracao-de-diretorios-e-log">
 <span id="sync-config-logging"></span><h3>16.1 Configuração de diretórios e log<a class="headerlink" href="#configuracao-de-diretorios-e-log" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-config-logging">
-<div class="code-block-caption"><span class="caption-text">Configuração de diretórios e log</span><a class="headerlink" href="#code-config-logging" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-config-logging"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-config-logging"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id27">
+<div class="code-block-caption"><span class="caption-text">Configuração de diretórios e log</span><a class="headerlink" href="#id27" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">VERBOSE</span><span class="o">=</span><span class="m">1</span>
 <span class="nv">base_dir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/TMP/SYNC&quot;</span>
 <span class="nv">log_dir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$base_dir</span><span class="s2">/LOGS&quot;</span>
@@ -1700,8 +1726,9 @@ mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</
 </section>
 <section id="cli-e-modos-de-execucao">
 <span id="sync-cli-usage"></span><h3>16.2 CLI e modos de execução<a class="headerlink" href="#cli-e-modos-de-execucao" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-cli-usage">
-<div class="code-block-caption"><span class="caption-text">CLI usage</span><a class="headerlink" href="#code-cli-usage" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-cli-usage"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-cli-usage"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id28">
+<div class="code-block-caption"><span class="caption-text">CLI usage</span><a class="headerlink" href="#id28" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>usage<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span>cat<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
 <span class="s">Uso: $0 [opções]</span>
@@ -1723,8 +1750,9 @@ mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="code-cli-getopts">
-<div class="code-block-caption"><span class="caption-text">CLI getopts</span><a class="headerlink" href="#code-cli-getopts" title="Link Permanente para esse código">#</a></div>
+<p id="sync-cli-getopts">[<a class="reference internal" href="api/sync.html#api-sync-cli-getopts"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-cli-getopts"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id29">
+<div class="code-block-caption"><span class="caption-text">CLI getopts</span><a class="headerlink" href="#id29" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">while</span><span class="w"> </span><span class="nb">getopts</span><span class="w"> </span><span class="s2">&quot;:p:e:y:hf&quot;</span><span class="w"> </span>opt<span class="p">;</span><span class="w"> </span><span class="k">do</span>
 <span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$opt</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">in</span>
 <span class="w">    </span>p<span class="o">)</span><span class="w"> </span><span class="nv">PROJETO_ESCOLHIDO</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OPTARG</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
@@ -1753,8 +1781,9 @@ mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</
 </section>
 <section id="selecao-do-contexto">
 <span id="sync-select-context"></span><h3>16.3 Seleção do contexto<a class="headerlink" href="#selecao-do-contexto" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-select-context">
-<div class="code-block-caption"><span class="caption-text">Seleção do contexto</span><a class="headerlink" href="#code-select-context" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-select-context"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-select-context"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id30">
+<div class="code-block-caption"><span class="caption-text">Seleção do contexto</span><a class="headerlink" href="#id30" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJETO_ESCOLHIDO</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ESTACAO_ESCOLHIDA</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span><span class="nv">found</span><span class="o">=</span><span class="m">0</span>
 <span class="w">  </span><span class="k">for</span><span class="w"> </span>key<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="p">!projects[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
@@ -1807,8 +1836,9 @@ mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</
 </section>
 <section id="ano-forcado">
 <span id="sync-ano-forcado"></span><h3>16.4 Ano forçado<a class="headerlink" href="#ano-forcado" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-ano-forcado">
-<div class="code-block-caption"><span class="caption-text">Ano forçado</span><a class="headerlink" href="#code-ano-forcado" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-ano-forcado"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-ano-forcado"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id31">
+<div class="code-block-caption"><span class="caption-text">Ano forçado</span><a class="headerlink" href="#id31" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ANO_FORCADO</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span>log_debug<span class="w"> </span><span class="s2">&quot;Ano forçado: </span><span class="nv">$ANO_FORCADO</span><span class="s2">&quot;</span>
 <span class="w">  </span><span class="nb">export</span><span class="w"> </span><span class="nv">_SHA_ANO_FORCADO</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$ANO_FORCADO</span><span class="s2">&quot;</span>
@@ -1846,8 +1876,9 @@ mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</
 </section>
 <section id="execucao-da-selecao-automatica">
 <span id="sync-auto-selection"></span><h3>16.5 Execução da seleção automática<a class="headerlink" href="#execucao-da-selecao-automatica" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-auto-selection">
-<div class="code-block-caption"><span class="caption-text">Seleção automática</span><a class="headerlink" href="#code-auto-selection" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-auto-selection"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-auto-selection"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id32">
+<div class="code-block-caption"><span class="caption-text">Seleção automática</span><a class="headerlink" href="#id32" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>obter_ultimo_sinc
 encontrar_closest_zip
 </pre></div>
@@ -1867,8 +1898,9 @@ encontrar_closest_zip
 </section>
 <section id="atalho-reftek-pacote-ja-contem-sds">
 <span id="sync-reftek-shortcut"></span><h3>16.6 Atalho REFTEK: pacote já contém <code class="docutils literal notranslate"><span class="pre">/sds/</span></code><a class="headerlink" href="#atalho-reftek-pacote-ja-contem-sds" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-reftek-shortcut">
-<div class="code-block-caption"><span class="caption-text">Atalho REFTEK com SDS</span><a class="headerlink" href="#code-reftek-shortcut" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-reftek-shortcut"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-reftek-shortcut"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id33">
+<div class="code-block-caption"><span class="caption-text">Atalho REFTEK com SDS</span><a class="headerlink" href="#id33" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Atalho: se ZIP já vier com /sds/ (Reftek), apenas extrai e publica</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$station_type</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;reftek&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span><span class="nv">local_year_last</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">last_date</span><span class="p">:</span><span class="nv">0</span><span class="p">:</span><span class="nv">4</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -1907,8 +1939,9 @@ encontrar_closest_zip
 </section>
 <section id="dispatch-final-e-encerramento">
 <span id="sync-dispatch"></span><h3>16.7 Dispatch final e encerramento<a class="headerlink" href="#dispatch-final-e-encerramento" title="Link permanente para este cabeçalho">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="code-dispatch">
-<div class="code-block-caption"><span class="caption-text">Dispatch final</span><a class="headerlink" href="#code-dispatch" title="Link Permanente para esse código">#</a></div>
+<p>[<a class="reference internal" href="api/sync.html#api-sync-dispatch"><span class="std std-ref">api</span></a>] | [<a class="reference internal" href="_modules/SYNC.sh.html#src-sync-dispatch"><span class="std std-ref">source</span></a>]</p>
+<div class="literal-block-wrapper docutils container" id="id34">
+<div class="code-block-caption"><span class="caption-text">Dispatch final</span><a class="headerlink" href="#id34" title="Link Permanente para esse código">#</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dispatch_processing<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$station_type</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">in</span>
 <span class="w">    </span>reftek<span class="o">)</span><span class="w"> </span>processar_reftek<span class="w"> </span><span class="p">;;</span>

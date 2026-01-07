@@ -23,12 +23,13 @@ O `SYNC.sh` automatiza:
 
 (sync-strict-mode)=
 ### 1.1 `set -euo pipefail`
+[{ref}`api <api-sync-strict-mode>`] | [{ref}`source <src-sync-strict-mode>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-STRICT-MODE"
 :end-before: "DOC-END: SYNC-MAIN-STRICT-MODE"
 :language: bash
 :caption: Modo estrito do shell
-:name: code-strict-mode
+:id: code-strict-mode
 ```
 O script impõe:
 
@@ -40,12 +41,13 @@ O script impõe:
 
 (sync-run-cmd)=
 ### 1.2 `run_cmd()`
+[{ref}`api <api-sync-run-cmd>`] | [{ref}`source <src-sync-run-cmd>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-run_cmd"
 :end-before: "DOC-END: SYNC-FUNC-run_cmd"
 :language: bash
 :caption: Função run_cmd
-:name: code-run-cmd
+:id: code-run-cmd
 ```
 **Finalidade:** executar um comando preservando o comportamento do `set -e`, mas registrando erro no log com timestamp.
 
@@ -65,12 +67,13 @@ O script impõe:
 
 (sync-station-lists)=
 ### 2.1 Listas por tipo
+[{ref}`api <api-sync-station-lists>`] | [{ref}`source <src-sync-station-lists>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-DATA-STATION-LISTS"
 :end-before: "DOC-END: SYNC-DATA-STATION-LISTS"
 :language: bash
 :caption: Listas de estações
-:name: code-station-lists
+:id: code-station-lists
 ```
 - `reftek_stations`: estações processadas pelo fluxo RT130.
 - `raspberry_stations`: estações processadas pelo fluxo Raspberry Shake.
@@ -79,12 +82,13 @@ Essas listas alimentam a detecção de `station_type`.
 
 (sync-das-codes)=
 ### 2.2 `das_codes`
+[{ref}`api <api-sync-das-codes>`] | [{ref}`source <src-sync-das-codes>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-DATA-DAS-CODES"
 :end-before: "DOC-END: SYNC-DATA-DAS-CODES"
 :language: bash
 :caption: Mapa de DAS codes
-:name: code-das-codes
+:id: code-das-codes
 ```
 Mapeia `ESTACAO → DAS_CODE` (ou serial/código de origem).
 
@@ -95,19 +99,22 @@ Mapeia `ESTACAO → DAS_CODE` (ou serial/código de origem).
 
 (sync-projects)=
 ### 2.3 `projects` + `project_map`
+[{ref}`api <api-sync-projects>`] | [{ref}`source <src-sync-projects>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-DATA-PROJECTS"
 :end-before: "DOC-END: SYNC-DATA-PROJECTS"
 :language: bash
 :caption: Lista de projetos
-:name: code-projects
+:id: code-projects
 ```
+(sync-project-map)=
+[{ref}`api <api-sync-project-map>`] | [{ref}`source <src-sync-project-map>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-DATA-PROJECT-MAP"
 :end-before: "DOC-END: SYNC-DATA-PROJECT-MAP"
 :language: bash
 :caption: Mapa de projetos
-:name: code-project-map
+:id: code-project-map
 ```
 - `projects`: menu de escolha **Projeto|Estação**.
 - `project_map`: Projeto → código de rede SDS (`BC`, `BL`, `IT`, `MC`, `SP`).
@@ -123,12 +130,13 @@ O inventário estático pode ser expandido com novas estações e projetos utili
 
 (sync-globals)=
 ### 3.1 Globais inicializadas com string vazia
+[{ref}`api <api-sync-globals>`] | [{ref}`source <src-sync-globals>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-INVAR-GLOBALS"
 :end-before: "DOC-END: SYNC-INVAR-GLOBALS"
 :language: bash
 :caption: Globais inicializadas
-:name: code-globals
+:id: code-globals
 ```
 O script define antecipadamente (vazio) variáveis que serão preenchidas no `main`:
 
@@ -149,12 +157,13 @@ O script define antecipadamente (vazio) variáveis que serão preenchidas no `ma
 
 (sync-build-code-pattern)=
 ### 4.1 `build_code_pattern()`
+[{ref}`api <api-sync-build-code-pattern>`] | [{ref}`source <src-sync-build-code-pattern>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-build_code_pattern"
 :end-before: "DOC-END: SYNC-FUNC-build_code_pattern"
 :language: bash
 :caption: build_code_pattern
-:name: code-build-code-pattern
+:id: code-build-code-pattern
 ```
 Transforma uma string com possíveis múltiplos códigos (separados por espaço) em uma alternativa regex com `|`.
 
@@ -165,12 +174,13 @@ Esse padrão é usado pela extração de datas REFTEK em qualquer profundidade (
 
 (sync-split-das-codes)=
 ### 4.2 `split_das_codes()`
+[{ref}`api <api-sync-split-das-codes>`] | [{ref}`source <src-sync-split-das-codes>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-split_das_codes"
 :end-before: "DOC-END: SYNC-FUNC-split_das_codes"
 :language: bash
 :caption: split_das_codes
-:name: code-split-das-codes
+:id: code-split-das-codes
 ```
 Gera o array global `_CODES_SPLIT` com os DAS codes individuais.
 
@@ -182,23 +192,25 @@ Gera o array global `_CODES_SPLIT` com os DAS codes individuais.
 
 (sync-log-debug)=
 ### 5.1 `log_debug()`
+[{ref}`api <api-sync-log-debug>`] | [{ref}`source <src-sync-log-debug>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-log_debug"
 :end-before: "DOC-END: SYNC-FUNC-log_debug"
 :language: bash
 :caption: log_debug
-:name: code-log-debug
+:id: code-log-debug
 ```
 Imprime mensagens de debug quando `VERBOSE=1` (definido no main).
 
 (sync-dia-juliano)=
 ### 5.2 `dia_juliano()`
+[{ref}`api <api-sync-dia-juliano>`] | [{ref}`source <src-sync-dia-juliano>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-dia_juliano"
 :end-before: "DOC-END: SYNC-FUNC-dia_juliano"
 :language: bash
 :caption: dia_juliano
-:name: code-dia-juliano
+:id: code-dia-juliano
 ```
 Converte data gregoriana para dia juliano via `date -d ... +%j`.
 
@@ -206,12 +218,13 @@ Converte data gregoriana para dia juliano via `date -d ... +%j`.
 
 (sync-is-station-in-list)=
 ### 5.3 `is_station_in_list()`
+[{ref}`api <api-sync-is-station-in-list>`] | [{ref}`source <src-sync-is-station-in-list>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-is_station_in_list"
 :end-before: "DOC-END: SYNC-FUNC-is_station_in_list"
 :language: bash
 :caption: is_station_in_list
-:name: code-is-station-in-list
+:id: code-is-station-in-list
 ```
 Checa pertencimento de uma estação em uma lista (retorno 0/1).
 
@@ -223,12 +236,13 @@ Checa pertencimento de uma estação em uma lista (retorno 0/1).
 
 (sync-seleciona-projeto)=
 ### 6.1 `seleciona_projeto_estacao()`
+[{ref}`api <api-sync-seleciona-projeto>`] | [{ref}`source <src-sync-seleciona-projeto>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-seleciona_projeto_estacao"
 :end-before: "DOC-END: SYNC-FUNC-seleciona_projeto_estacao"
 :language: bash
 :caption: seleciona_projeto_estacao
-:name: code-seleciona-projeto
+:id: code-seleciona-projeto
 ```
 Fluxo:
 
@@ -255,12 +269,13 @@ Fluxo:
 
 (sync-obter-ultimo-sinc)=
 ### 7.1 `obter_ultimo_sinc()`
+[{ref}`api <api-sync-obter-ultimo-sinc>`] | [{ref}`source <src-sync-obter-ultimo-sinc>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-obter_ultimo_sinc"
 :end-before: "DOC-END: SYNC-FUNC-obter_ultimo_sinc"
 :language: bash
 :caption: obter_ultimo_sinc
-:name: code-obter-ultimo-sinc
+:id: code-obter-ultimo-sinc
 ```
 Esta função define o ponto de partida “a partir de onde procurar dados novos”.
 
@@ -296,12 +311,13 @@ Esses blocos são usados pela seleção automática do pacote “closest”.
 
 (sync-prepare-archive)=
 ### 8.1 `prepare_archive()`
+[{ref}`api <api-sync-prepare-archive>`] | [{ref}`source <src-sync-prepare-archive>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-prepare_archive"
 :end-before: "DOC-END: SYNC-FUNC-prepare_archive"
 :language: bash
 :caption: prepare_archive
-:name: code-prepare-archive
+:id: code-prepare-archive
 ```
 Normaliza a entrada e define 3 globais:
 
@@ -319,12 +335,13 @@ Casos:
 
 (sync-list-archive-paths)=
 ### 8.2 `list_archive_paths()`
+[{ref}`api <api-sync-list-archive-paths>`] | [{ref}`source <src-sync-list-archive-paths>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-list_archive_paths"
 :end-before: "DOC-END: SYNC-FUNC-list_archive_paths"
 :language: bash
 :caption: list_archive_paths
-:name: code-list-archive-paths
+:id: code-list-archive-paths
 ```
 Lista caminhos internos sem extrair:
 - zip: `unzip -Z1`
@@ -339,12 +356,13 @@ A seleção do pacote depende de conseguir extrair **quais dias (YYYYJJJ)** exis
 
 (sync-extract-dates-rasp)=
 ### 9.1 Raspberry: `extract_dates_from_rasp()`
+[{ref}`api <api-sync-extract-dates-rasp>`] | [{ref}`source <src-sync-extract-dates-rasp>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-extract_dates_from_rasp"
 :end-before: "DOC-END: SYNC-FUNC-extract_dates_from_rasp"
 :language: bash
 :caption: extract_dates_from_rasp
-:name: code-extract-dates-rasp
+:id: code-extract-dates-rasp
 ```
 Procura entradas no padrão:
 
@@ -354,12 +372,13 @@ Extrai `YYYY` e `JJJ` do final do path (parte `...<YYYY>.<JJJ>`), retornando `YY
 
 (sync-extract-reftek-dates)=
 ### 9.2 REFTEK (qualquer profundidade): `extract_reftek_dates_any_depth()`
+[{ref}`api <api-sync-extract-reftek-dates>`] | [{ref}`source <src-sync-extract-reftek-dates>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-extract_reftek_dates_any_depth"
 :end-before: "DOC-END: SYNC-FUNC-extract_reftek_dates_any_depth"
 :language: bash
 :caption: extract_reftek_dates_any_depth
-:name: code-extract-reftek-dates
+:id: code-extract-reftek-dates
 ```
 Objetivo: encontrar diretórios que indiquem a presença de dados no padrão REFTEK:
 
@@ -380,12 +399,13 @@ Saída: lista de “datas brutas” (o token do `YYYYJJJ` possivelmente com sufi
 
 (sync-encontrar-closest-zip)=
 ### 10.1 `encontrar_closest_zip()`
+[{ref}`api <api-sync-encontrar-closest-zip>`] | [{ref}`source <src-sync-encontrar-closest-zip>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-encontrar_closest_zip"
 :end-before: "DOC-END: SYNC-FUNC-encontrar_closest_zip"
 :language: bash
 :caption: encontrar_closest_zip
-:name: code-encontrar-closest-zip
+:id: code-encontrar-closest-zip
 ```
 Percorre todos os arquivos em `ZIP/<ESTACAO>/` e escolhe o melhor candidato com base no último sincronizado.
 
@@ -433,12 +453,13 @@ Estas funções não fazem a seleção do pacote; elas entram no **fluxo REFTEK*
 
 (sync-comparar-parfiles)=
 ### 11.1 `comparar_parfiles_com_tolerancia()`
+[{ref}`api <api-sync-comparar-parfiles>`] | [{ref}`source <src-sync-comparar-parfiles>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-comparar_parfiles_com_tolerancia"
 :end-before: "DOC-END: SYNC-FUNC-comparar_parfiles_com_tolerancia"
 :language: bash
 :caption: comparar_parfiles_com_tolerancia
-:name: code-comparar-parfiles
+:id: code-comparar-parfiles
 ```
 Compara `parfile.txt` gerado vs template `PARFILES/<ESTACAO>_parfile.txt`.
 
@@ -454,12 +475,13 @@ Falhas geram `exit != 0`, abortando o script (por `set -e` no chamador).
 
 (sync-resumir-parfiles)=
 ### 11.2 `resumir_auto_substituicoes_parfile()`
+[{ref}`api <api-sync-resumir-parfiles>`] | [{ref}`source <src-sync-resumir-parfiles>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-resumir_auto_substituicoes_parfile"
 :end-before: "DOC-END: SYNC-FUNC-resumir_auto_substituicoes_parfile"
 :language: bash
 :caption: resumir_auto_substituicoes_parfile
-:name: code-resumir-parfiles
+:id: code-resumir-parfiles
 ```
 Lê `rt2ms.msg` e imprime no log um resumo humano quando o `rt2ms` tiver substituído automaticamente:
 - `NETCODE` inválido → default
@@ -471,12 +493,13 @@ Lê `rt2ms.msg` e imprime no log um resumo humano quando o `rt2ms` tiver substit
 
 (sync-find-reftek-dirs-stream1)=
 ### 12.1 `find_reftek_dirs_stream1()`
+[{ref}`api <api-sync-find-reftek-dirs-stream1>`] | [{ref}`source <src-sync-find-reftek-dirs-stream1>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-find_reftek_dirs_stream1"
 :end-before: "DOC-END: SYNC-FUNC-find_reftek_dirs_stream1"
 :language: bash
 :caption: find_reftek_dirs_stream1
-:name: code-find-reftek-dirs-stream1
+:id: code-find-reftek-dirs-stream1
 ```
 Busca diretórios `*/<DAS>/1` abaixo de um root (tipicamente o `binary_dir`).
 
@@ -484,12 +507,13 @@ Uso: verificação de integridade horária (espera 24 arquivos por diretório-ho
 
 (sync-find-reftek-files-stream0)=
 ### 12.2 `find_reftek_files_stream0()`
+[{ref}`api <api-sync-find-reftek-files-stream0>`] | [{ref}`source <src-sync-find-reftek-files-stream0>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-find_reftek_files_stream0"
 :end-before: "DOC-END: SYNC-FUNC-find_reftek_files_stream0"
 :language: bash
 :caption: find_reftek_files_stream0
-:name: code-find-reftek-files-stream0
+:id: code-find-reftek-files-stream0
 ```
 Busca arquivos `*/<DAS>/0/*` (tipicamente logs SH) para extrair GPS e bateria.
 
@@ -499,12 +523,13 @@ Busca arquivos `*/<DAS>/0/*` (tipicamente logs SH) para extrair GPS e bateria.
 
 (sync-processar-reftek)=
 ### 13.1 `processar_reftek()`
+[{ref}`api <api-sync-processar-reftek>`] | [{ref}`source <src-sync-processar-reftek>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-processar_reftek"
 :end-before: "DOC-END: SYNC-FUNC-processar_reftek"
 :language: bash
 :caption: processar_reftek
-:name: code-processar-reftek
+:id: code-processar-reftek
 ```
 Este bloco é executado quando `station_type="reftek"` e o atalho “/sds/ no ZIP” não se aplica.
 
@@ -544,12 +569,13 @@ Saída operacional: SDS pronta em `target_dir/sds/`, logs prontos para consolida
 
 (sync-processar-raspberry)=
 ### 14.1 `processar_raspberry()`
+[{ref}`api <api-sync-processar-raspberry>`] | [{ref}`source <src-sync-processar-raspberry>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-processar_raspberry"
 :end-before: "DOC-END: SYNC-FUNC-processar_raspberry"
 :language: bash
 :caption: processar_raspberry
-:name: code-processar-raspberry
+:id: code-processar-raspberry
 ```
 Etapas principais:
 
@@ -571,12 +597,13 @@ Etapas principais:
 
 (sync-finalizar-log)=
 ### 15.1 `finalizar_log()`
+[{ref}`api <api-sync-finalizar-log>`] | [{ref}`source <src-sync-finalizar-log>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-finalizar_log"
 :end-before: "DOC-END: SYNC-FUNC-finalizar_log"
 :language: bash
 :caption: finalizar_log
-:name: code-finalizar-log
+:id: code-finalizar-log
 ```
 Consolida o log e cria uma chave única da execução:
 
@@ -601,12 +628,13 @@ Ações:
 
 (sync-config-logging)=
 ### 16.1 Configuração de diretórios e log
+[{ref}`api <api-sync-config-logging>`] | [{ref}`source <src-sync-config-logging>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-CONFIG-LOGGING"
 :end-before: "DOC-END: SYNC-MAIN-CONFIG-LOGGING"
 :language: bash
 :caption: Configuração de diretórios e log
-:name: code-config-logging
+:id: code-config-logging
 ```
 Define o ambiente de execução:
 
@@ -622,19 +650,22 @@ A partir daqui, **tudo** que o script imprime vai para o arquivo e para o stdout
 
 (sync-cli-usage)=
 ### 16.2 CLI e modos de execução
+[{ref}`api <api-sync-cli-usage>`] | [{ref}`source <src-sync-cli-usage>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-CLI-USAGE"
 :end-before: "DOC-END: SYNC-MAIN-CLI-USAGE"
 :language: bash
 :caption: CLI usage
-:name: code-cli-usage
+:id: code-cli-usage
 ```
+(sync-cli-getopts)=
+[{ref}`api <api-sync-cli-getopts>`] | [{ref}`source <src-sync-cli-getopts>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-CLI-GETOPTS"
 :end-before: "DOC-END: SYNC-MAIN-CLI-GETOPTS"
 :language: bash
 :caption: CLI getopts
-:name: code-cli-getopts
+:id: code-cli-getopts
 ```
 - `usage()` define flags:
   - `-p` projeto, `-e` estação
@@ -646,12 +677,13 @@ A partir daqui, **tudo** que o script imprime vai para o arquivo e para o stdout
 
 (sync-select-context)=
 ### 16.3 Seleção do contexto
+[{ref}`api <api-sync-select-context>`] | [{ref}`source <src-sync-select-context>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-SELECT-CONTEXT"
 :end-before: "DOC-END: SYNC-MAIN-SELECT-CONTEXT"
 :language: bash
 :caption: Seleção do contexto
-:name: code-select-context
+:id: code-select-context
 ```
 Caso `-p` e `-e` tenham sido fornecidos:
 
@@ -665,12 +697,13 @@ Caso contrário, cai no modo interativo:
 
 (sync-ano-forcado)=
 ### 16.4 Ano forçado
+[{ref}`api <api-sync-ano-forcado>`] | [{ref}`source <src-sync-ano-forcado>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-ANO-FORCADO"
 :end-before: "DOC-END: SYNC-MAIN-ANO-FORCADO"
 :language: bash
 :caption: Ano forçado
-:name: code-ano-forcado
+:id: code-ano-forcado
 ```
 Se `ANO_FORCADO` foi definido, o script **redefine** (override) a função `obter_ultimo_sinc()` para usar exclusivamente:
 
@@ -680,12 +713,13 @@ Isso substitui a lógica “ano atual e anterior”.
 
 (sync-auto-selection)=
 ### 16.5 Execução da seleção automática
+[{ref}`api <api-sync-auto-selection>`] | [{ref}`source <src-sync-auto-selection>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-AUTO-SELECTION"
 :end-before: "DOC-END: SYNC-MAIN-AUTO-SELECTION"
 :language: bash
 :caption: Seleção automática
-:name: code-auto-selection
+:id: code-auto-selection
 ```
 Sequência fixa:
 
@@ -699,12 +733,13 @@ Após isso, o script tem:
 
 (sync-reftek-shortcut)=
 ### 16.6 Atalho REFTEK: pacote já contém `/sds/`
+[{ref}`api <api-sync-reftek-shortcut>`] | [{ref}`source <src-sync-reftek-shortcut>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-REFTEK-SDS-SHORTCUT"
 :end-before: "DOC-END: SYNC-MAIN-REFTEK-SDS-SHORTCUT"
 :language: bash
 :caption: Atalho REFTEK com SDS
-:name: code-reftek-shortcut
+:id: code-reftek-shortcut
 ```
 Se `station_type=reftek` e o `closest_zip` contém paths com `/sds/`:
 
@@ -716,12 +751,13 @@ Se `station_type=reftek` e o `closest_zip` contém paths com `/sds/`:
 
 (sync-dispatch)=
 ### 16.7 Dispatch final e encerramento
+[{ref}`api <api-sync-dispatch>`] | [{ref}`source <src-sync-dispatch>`]
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-DISPATCH"
 :end-before: "DOC-END: SYNC-MAIN-DISPATCH"
 :language: bash
 :caption: Dispatch final
-:name: code-dispatch
+:id: code-dispatch
 ```
 Se não caiu no atalho:
 
