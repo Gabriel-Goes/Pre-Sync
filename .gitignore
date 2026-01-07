@@ -1,0 +1,9 @@
+venv-docs/
+BC4_*/
+BC9_*/
+FIGS/
+LOGS/
+__pycache__/
+docs/
+python/
+.venv-docs/
