@@ -24,7 +24,7 @@ O `SYNC.sh` automatiza:
 ### 1.1 `set -euo pipefail` (linha 14)
 O script impõe:
 
-- `-e`: aborta ao ocorrer erro (retorno ≠ 0), exceto em construções controladas.
+- `-e`: aborta ao ocorrer erro (retorno ≠ 0), exceto em construções controladas, ou seja, dentro de testes, if/elif/while/until não aborta se retornar ≠ 0.
 - `-u`: aborta se variável não definida for expandida.
 - `-o pipefail`: um erro em qualquer comando do *pipe* propaga falha.
 
@@ -66,6 +66,9 @@ Mapeia `ESTACAO → DAS_CODE` (ou serial/código de origem).
 - `project_map`: Projeto → código de rede SDS (`BC`, `BL`, `IT`, `MC`, `SP`).
 
 No fluxo, o `project_code` sempre vem de `project_map[PROJETO_ESCOLHIDO]`.
+
+### 2.4 Futura expansão
+O inventário estático pode ser expandido com novas estações e projetos utilizando PARFILE
 
 ---
 
@@ -150,7 +153,7 @@ Fluxo:
 ### 7.1 `obter_ultimo_sinc()` (linhas 169–212)
 Esta função define o ponto de partida “a partir de onde procurar dados novos”.
 
-#### Caso A — sincronização forçada (`FORCE_SYNC=1`) (linhas 170–179)
+#### Caso A — sincronização forçada com opção -f (`FORCE_SYNC=1`) (linhas 170–179)
 - `ano_sinc = ano atual`
 - `ultimo_sinc = 0`
 
@@ -223,7 +226,7 @@ Características:
 
 - não assume profundidade fixa (funciona se o pacote tiver prefixos extras)
 - trata paths com `./` no início
-- aceita múltiplos DAS via `codes_pat` (`A|B|C`)
+- aceita múltiplos DAS via `codes_pat` (`A|B|C`) (PARB ocorreu de mudar o DAS_CODE, por isto foi necessário criar uma função que aceite uma lista de DAS codes)
 - aceita `YYYYJJJ` com sufixo (`YYYYJJJ_...`), mas reduz para os 7 dígitos depois
 
 Saída: lista de “datas brutas” (o token do `YYYYJJJ` possivelmente com sufixo), depois o chamador normaliza para `YYYYJJJ` puro.
