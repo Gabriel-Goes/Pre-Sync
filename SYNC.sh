@@ -11,7 +11,9 @@
 #
 # Resultado em: /var/WORKTMP/SYNC/ (aqui: $HOME/TMP/SYNC)
 #
+# DOC-SECTION: SYNC-MAIN-STRICT-MODE
 set -euo pipefail
+# DOC-END: SYNC-MAIN-STRICT-MODE
 
 # Você pode executar forçadamente o processo com -f (FORCE_SYNC=1)
 FORCE_SYNC=0
@@ -21,6 +23,7 @@ FORCE_SYNC=0
 ################################################################################
 # run_cmd: executa um comando e, se falhar, registra no log e retorna o código.
 # (compatível com set -e)
+# DOC-SECTION: SYNC-FUNC-run_cmd
 run_cmd() {
     local cmd=("$@")
     if "${cmd[@]}"; then
@@ -30,11 +33,15 @@ run_cmd() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] [ERROR] Comando '${cmd[*]}' retornou $status." | tee -a "$log_file" >&2
     return $status
 }
+# DOC-END: SYNC-FUNC-run_cmd
 
 ########################## ARRAYS E DICIONÁRIOS ################################
+# DOC-SECTION: SYNC-DATA-STATION-LISTS
 declare -a reftek_stations=(PRB1 BC9 BC4 BCM2 SP7 IT1)
 declare -a raspberry_stations=(MC9 IT9)
+# DOC-END: SYNC-DATA-STATION-LISTS
 
+# DOC-SECTION: SYNC-DATA-DAS-CODES
 declare -A das_codes=(
     [BCM2]=AD19
     [PRB1]="AD20"   # suporte a múltiplos códigos: basta separar por espaço (ex: "AD20 9789")
@@ -44,8 +51,10 @@ declare -A das_codes=(
     [BC4]=9775
     [MC9]=REDD8
     [IT9]=REDD8
+# DOC-END: SYNC-DATA-DAS-CODES
 )
 
+# DOC-SECTION: SYNC-DATA-PROJECTS
 declare -A projects=(
     [1]="BAESA ENERCAN|BC4"
     [2]="BAESA ENERCAN|BC9"
@@ -55,19 +64,23 @@ declare -A projects=(
     [6]="MACHADINHO|BCM2"
     [7]="MACHADINHO|MC9"
     [8]="SALTO PILAO|SP7"
+# DOC-END: SYNC-DATA-PROJECTS
 )
 
+# DOC-SECTION: SYNC-DATA-PROJECT-MAP
 declare -A project_map=(
     ["BAESA ENERCAN"]=BC
     [PARAIBUNA]=BL
     [ITA]=IT
     [MACHADINHO]=MC
     [SALTO PILAO]=SP
+# DOC-END: SYNC-DATA-PROJECT-MAP
 )
 
 ################################################################################
 # Globais (definidos para não quebrar com set -u)
 ################################################################################
+# DOC-SECTION: SYNC-INVAR-GLOBALS
 PROJETO_ESCOLHIDO=""
 ESTACAO_ESCOLHIDA=""
 ANO_FORCADO=""
@@ -86,10 +99,12 @@ closest_date=""
 last_date=""
 ultimo_sinc=""
 ano_sinc=""
+# DOC-END: SYNC-INVAR-GLOBALS
 
 ################################################################################
 # Helpers para DAS_CODE múltiplo
 ################################################################################
+# DOC-SECTION: SYNC-FUNC-build_code_pattern
 build_code_pattern() {
     local dc="$1"
     local -a codes
@@ -102,20 +117,28 @@ build_code_pattern() {
     done
     printf '%s' "$pat"
 }
+# DOC-END: SYNC-FUNC-build_code_pattern
 
 # Retorna codes em array global (por conveniência local)
+# DOC-SECTION: SYNC-FUNC-split_das_codes
 split_das_codes() {
     local dc="$1"
     IFS=' ' read -r -a _CODES_SPLIT <<< "$dc"
 }
+# DOC-END: SYNC-FUNC-split_das_codes
 
 ################################################################################
 ######################### FUNÇÕES DE UTILIDADE #################################
 ################################################################################
+# DOC-SECTION: SYNC-FUNC-log_debug
 function log_debug() { [[ "${VERBOSE:-0}" -eq 1 ]] && echo "[DEBUG] $*"; }
+# DOC-END: SYNC-FUNC-log_debug
 
+# DOC-SECTION: SYNC-FUNC-dia_juliano
 function dia_juliano() { date -d "$1" +%j; }
+# DOC-END: SYNC-FUNC-dia_juliano
 
+# DOC-SECTION: SYNC-FUNC-is_station_in_list
 function is_station_in_list() {
     local station="$1"; shift
     local e
@@ -124,10 +147,12 @@ function is_station_in_list() {
     done
     return 1
 }
+# DOC-END: SYNC-FUNC-is_station_in_list
 
 ################################################################################
 ########################## FUNÇÃO DE SELEÇÃO ####################################
 ################################################################################
+# DOC-SECTION: SYNC-FUNC-seleciona_projeto_estacao
 function seleciona_projeto_estacao() {
     echo
     echo "→ Selecione o Projeto e Estação:"
@@ -162,10 +187,12 @@ function seleciona_projeto_estacao() {
         exit 1
     fi
 }
+# DOC-END: SYNC-FUNC-seleciona_projeto_estacao
 
 ################################################################################
 ########################### BUSCA ÚLTIMO SINCRONIZADO ###########################
 ################################################################################
+# DOC-SECTION: SYNC-FUNC-obter_ultimo_sinc
 function obter_ultimo_sinc() {
     if [[ "$FORCE_SYNC" -eq 1 ]]; then
         echo "[$(date +'%Y-%m-%d %H:%M:%S')] [FORCE] Sincronização forçada: ignorando último dia na SDS."
@@ -207,10 +234,12 @@ function obter_ultimo_sinc() {
     ultimo_sinc="$encontrado"
     echo "→ Último dia sincronizado na SDS (ano $ano_sinc): $ultimo_sinc"
 }
+# DOC-END: SYNC-FUNC-obter_ultimo_sinc
 
 ################################################################################
 # Suporte a .zip.bz2 + listagem genérica de paths dentro de ZIP/RAR/TAR
 ################################################################################
+# DOC-SECTION: SYNC-FUNC-prepare_archive
 prepare_archive() {
     local in="$1"
     ARCH_ORIG="$in"
@@ -245,7 +274,9 @@ prepare_archive() {
     esac
     return 0
 }
+# DOC-END: SYNC-FUNC-prepare_archive
 
+# DOC-SECTION: SYNC-FUNC-list_archive_paths
 list_archive_paths() {
     local kind="$1"
     local file="$2"
@@ -256,7 +287,9 @@ list_archive_paths() {
         *) return 1 ;;
     esac
 }
+# DOC-END: SYNC-FUNC-list_archive_paths
 
+# DOC-SECTION: SYNC-FUNC-extract_dates_from_rasp
 extract_dates_from_rasp() {
     local zip_file="$1"
     local das_code="$2"
@@ -269,9 +302,11 @@ extract_dates_from_rasp() {
         if (year ~ /^[0-9]{4}$/ && jul ~ /^[0-9]{3}$/) print year jul
     }' | sort -n | uniq
 }
+# DOC-END: SYNC-FUNC-extract_dates_from_rasp
 
 # Extrai diretórios YYYYJJJ quando existe:
 #   YYYYJJJ/DAS/0 ou YYYYJJJ/DAS/1 (qualquer profundidade)
+# DOC-SECTION: SYNC-FUNC-extract_reftek_dates_any_depth
 extract_reftek_dates_any_depth() {
     local kind="$1"
     local file="$2"
@@ -301,10 +336,12 @@ extract_reftek_dates_any_depth() {
         }
     ' | sort -u
 }
+# DOC-END: SYNC-FUNC-extract_reftek_dates_any_depth
 
 ################################################################################
 ######################## BUSCA DO ZIP MAIS PRÓXIMO #############################
 ################################################################################
+# DOC-SECTION: SYNC-FUNC-encontrar_closest_zip
 function encontrar_closest_zip() {
     local origin_dir="$base_dir/ZIP/$ESTACAO_ESCOLHIDA"
     local best_diff=999
@@ -406,10 +443,12 @@ function encontrar_closest_zip() {
     echo "     • Último dia:   $last_date - $last_gregorian"
     echo "###############################################"
 }
+# DOC-END: SYNC-FUNC-encontrar_closest_zip
 
 ################################################################################
 # Validação parfile + resumo
 ################################################################################
+# DOC-SECTION: SYNC-FUNC-comparar_parfiles_com_tolerancia
 comparar_parfiles_com_tolerancia() {
     local par_template="$1"
     local par_expl="$2"
@@ -533,7 +572,9 @@ comparar_parfiles_com_tolerancia() {
       END { exit erro }
     ' "$par_expl" "$par_template"
 }
+# DOC-END: SYNC-FUNC-comparar_parfiles_com_tolerancia
 
+# DOC-SECTION: SYNC-FUNC-resumir_auto_substituicoes_parfile
 function resumir_auto_substituicoes_parfile() {
     local msg_file="$1"
     [[ -f "$msg_file" ]] || return 0
@@ -573,11 +614,13 @@ function resumir_auto_substituicoes_parfile() {
     }
     ' "$msg_file"
 }
+# DOC-END: SYNC-FUNC-resumir_auto_substituicoes_parfile
 
 ################################################################################
 ########################### PROCESSAMENTO REFTEK ################################
 ################################################################################
 # FIX: find robusto sem -regex (evita falso "não encontrado" e evita depender de code_pattern)
+# DOC-SECTION: SYNC-FUNC-find_reftek_dirs_stream1
 find_reftek_dirs_stream1() {
     local root="$1"; shift
     local -a codes=("$@")
@@ -592,7 +635,9 @@ find_reftek_dirs_stream1() {
     args+=( ")" )
     find "${args[@]}"
 }
+# DOC-END: SYNC-FUNC-find_reftek_dirs_stream1
 
+# DOC-SECTION: SYNC-FUNC-find_reftek_files_stream0
 find_reftek_files_stream0() {
     local root="$1"; shift
     local -a codes=("$@")
@@ -607,7 +652,9 @@ find_reftek_files_stream0() {
     args+=( ")" )
     find "${args[@]}"
 }
+# DOC-END: SYNC-FUNC-find_reftek_files_stream0
 
+# DOC-SECTION: SYNC-FUNC-processar_reftek
 function processar_reftek() {
     echo
     echo "→ Iniciando processamento REFTEK para estação $ESTACAO_ESCOLHIDA"
@@ -774,10 +821,12 @@ function processar_reftek() {
 
     echo "→ Processamento REFTEK concluído."
 }
+# DOC-END: SYNC-FUNC-processar_reftek
 
 ################################################################################
 ########################## PROCESSAMENTO RASPBERRY ##############################
 ################################################################################
+# DOC-SECTION: SYNC-FUNC-processar_raspberry
 function processar_raspberry() {
     echo
     echo "→ Iniciando processamento RASPBERRY para estação $ESTACAO_ESCOLHIDA"
@@ -832,10 +881,12 @@ function processar_raspberry() {
     unset -v log_r2m_file || true
     echo "→ Processamento RASPBERRY concluído."
 }
+# DOC-END: SYNC-FUNC-processar_raspberry
 
 ################################################################################
 ########################### RENOMEAR LOG FINAL ##################################
 ################################################################################
+# DOC-SECTION: SYNC-FUNC-finalizar_log
 function finalizar_log() {
     if [[ -f "$log_file" ]]; then
         local sds_size
@@ -884,10 +935,12 @@ function finalizar_log() {
         echo "[WARN] Arquivo de log '$log_file' não encontrado." >&2
     fi
 }
+# DOC-END: SYNC-FUNC-finalizar_log
 
 ################################################################################
 ########################### CONFIG + MAIN #######################################
 ################################################################################
+# DOC-SECTION: SYNC-MAIN-CONFIG-LOGGING
 VERBOSE=1
 base_dir="$HOME/TMP/SYNC"
 log_dir="$base_dir/LOGS"
@@ -897,7 +950,9 @@ log_file="$log_dir/test.log"
 : > "$log_file"
 exec > >(tee -a "$log_file") 2>&1
 echo "→ Sincronização iniciada em: $(date '+%Y-%m-%d %H:%M:%S')" >> "$log_file"
+# DOC-END: SYNC-MAIN-CONFIG-LOGGING
 
+# DOC-SECTION: SYNC-MAIN-CLI-USAGE
 usage() {
   cat << EOF
 Uso: $0 [opções]
@@ -916,7 +971,9 @@ Exemplos:
 EOF
   exit 1
 }
+# DOC-END: SYNC-MAIN-CLI-USAGE
 
+# DOC-SECTION: SYNC-MAIN-CLI-GETOPTS
 while getopts ":p:e:y:hf" opt; do
   case "$opt" in
     p) PROJETO_ESCOLHIDO="$OPTARG" ;;
@@ -928,7 +985,9 @@ while getopts ":p:e:y:hf" opt; do
   esac
 done
 shift $((OPTIND -1))
+# DOC-END: SYNC-MAIN-CLI-GETOPTS
 
+# DOC-SECTION: SYNC-MAIN-SELECT-CONTEXT
 if [[ -n "$PROJETO_ESCOLHIDO" && -n "$ESTACAO_ESCOLHIDA" ]]; then
   found=0
   for key in "${!projects[@]}"; do
@@ -964,7 +1023,9 @@ if [[ -n "$PROJETO_ESCOLHIDO" && -n "$ESTACAO_ESCOLHIDA" ]]; then
 else
   seleciona_projeto_estacao
 fi
+# DOC-END: SYNC-MAIN-SELECT-CONTEXT
 
+# DOC-SECTION: SYNC-MAIN-ANO-FORCADO
 if [[ -n "$ANO_FORCADO" ]]; then
   log_debug "Ano forçado: $ANO_FORCADO"
   export _SHA_ANO_FORCADO="$ANO_FORCADO"
@@ -991,10 +1052,14 @@ if [[ -n "$ANO_FORCADO" ]]; then
     echo "→ Último dia sincronizado na SDS ($sds_dir): $ultimo_sinc"
   }
 fi
+# DOC-END: SYNC-MAIN-ANO-FORCADO
 
+# DOC-SECTION: SYNC-MAIN-AUTO-SELECTION
 obter_ultimo_sinc
 encontrar_closest_zip
+# DOC-END: SYNC-MAIN-AUTO-SELECTION
 
+# DOC-SECTION: SYNC-MAIN-REFTEK-SDS-SHORTCUT
 # Atalho: se ZIP já vier com /sds/ (Reftek), apenas extrai e publica
 if [[ "$station_type" == "reftek" ]]; then
   local_year_last="${last_date:0:4}"
@@ -1020,7 +1085,9 @@ if [[ "$station_type" == "reftek" ]]; then
     exit 0
   fi
 fi
+# DOC-END: SYNC-MAIN-REFTEK-SDS-SHORTCUT
 
+# DOC-SECTION: SYNC-MAIN-DISPATCH
 dispatch_processing() {
   case "$station_type" in
     reftek) processar_reftek ;;
@@ -1032,3 +1099,4 @@ dispatch_processing() {
 dispatch_processing
 finalizar_log
 exit 0
+# DOC-END: SYNC-MAIN-DISPATCH
