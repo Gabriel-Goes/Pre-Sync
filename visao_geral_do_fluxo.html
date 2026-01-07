@@ -6,7 +6,7 @@
 <link rel="index" title="Índice" href="genindex.html" /><link rel="search" title="Buscar" href="search.html" /><link rel="next" title="fluxo_reftek" href="fluxo_reftek.html" /><link rel="prev" title="guia_operador" href="guia_operador.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
-        <title>Visão geral do fluxo - documentação SYNC - Sincronização SDS 0.1.0</title>
+        <title>Visão geral do fluxo (SYNC.sh) - documentação SYNC - Sincronização SDS 0.1.0</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -159,7 +159,7 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="guia_rapido.html">Guia rápido</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guia_operador.html">guia_operador</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Visão geral do fluxo</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Visão geral do fluxo (<code class="docutils literal notranslate"><span class="pre">SYNC.sh</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxo_reftek.html">fluxo_reftek</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxo_raspberry.html">fluxo_raspberry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="estrutura_diretorios.html">estrutura_diretorios</a></li>
@@ -201,216 +201,654 @@
           </label>
         </div>
         <article role="main">
-          <section id="visao-geral-do-fluxo">
-<h1>Visão geral do fluxo<a class="headerlink" href="#visao-geral-do-fluxo" title="Link permanente para este cabeçalho">#</a></h1>
-<p>O <code class="docutils literal notranslate"><span class="pre">SYNC.sh</span></code> é o fluxo principal para <strong>sincronizar</strong> e <strong>publicar</strong> dados de estações <strong>REFTEK RT130</strong> e <strong>Raspberry Shake</strong> na estrutura <strong>SDS (SeisComP)</strong>, com <strong>seleção automática do pacote</strong> de dados a processar e <strong>rastreabilidade via logs</strong>.</p>
+          <section id="visao-geral-do-fluxo-sync-sh">
+<h1>Visão geral do fluxo (<code class="docutils literal notranslate"><span class="pre">SYNC.sh</span></code>)<a class="headerlink" href="#visao-geral-do-fluxo-sync-sh" title="Link permanente para este cabeçalho">#</a></h1>
+<p>Este documento descreve <strong>o fluxo geral</strong> do script <code class="docutils literal notranslate"><span class="pre">/var/WORKTMP/SYNC/SYNC.sh</span></code> (também usado como <code class="docutils literal notranslate"><span class="pre">$HOME/TMP/SYNC/SYNC.sh</span></code>), explicando <strong>cada bloco funcional</strong> (funções, estruturas de dados, variáveis globais e o <code class="docutils literal notranslate"><span class="pre">main</span></code>) e como os dados percorrem o pipeline até publicação na estrutura <strong>SDS (SeisComP)</strong>.</p>
+<blockquote>
+<div><p>Convenção deste texto: quando eu cito “linhas X–Y”, refiro-me ao arquivo <code class="docutils literal notranslate"><span class="pre">SYNC.sh</span></code> atual (≈ 1034 linhas).</p>
+</div></blockquote>
 <hr class="docutils" />
-<section id="estrutura-de-diretorios-e-entradas">
-<h2>1) Estrutura de diretórios e entradas<a class="headerlink" href="#estrutura-de-diretorios-e-entradas" title="Link permanente para este cabeçalho">#</a></h2>
-<p>O <code class="docutils literal notranslate"><span class="pre">SYNC.sh</span></code> trabalha a partir do diretório base:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">base_dir</span> <span class="pre">=</span> <span class="pre">$HOME/TMP/SYNC</span></code></p></li>
-</ul>
-<p>Principais subdiretórios usados pelo fluxo:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ZIP/&lt;ESTACAO&gt;/</span></code>
-Entrada: arquivos compactados (<code class="docutils literal notranslate"><span class="pre">.zip</span></code>, <code class="docutils literal notranslate"><span class="pre">.zip.bz2</span></code>, <code class="docutils literal notranslate"><span class="pre">.rar</span></code>, <code class="docutils literal notranslate"><span class="pre">.tar</span></code>) por estação.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">PARFILES/</span></code>
-Templates de parfile: <code class="docutils literal notranslate"><span class="pre">PARFILES/&lt;ESTACAO&gt;_parfile.txt</span></code> (usado para validar o parfile gerado).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">python/rt2ms_py3/</span></code>
-Conversor REFTEK binário → miniSEED (via <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">rt2ms_py3.rt2ms_py3</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">LOGS/</span></code>
-Saída: logs do processo (<code class="docutils literal notranslate"><span class="pre">*_sync.log</span></code>, <code class="docutils literal notranslate"><span class="pre">*_r2m.log</span></code>) e anexos (ex.: <code class="docutils literal notranslate"><span class="pre">RT130_*.log</span></code>).</p></li>
-</ul>
-<p>Saída operacional (por execução):</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">base_dir/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;/</span></code> (diretório de trabalho da sincronização)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">base_dir/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;/sds/</span></code> (SDS gerada localmente antes do <code class="docutils literal notranslate"><span class="pre">workthisout</span></code>)</p></li>
-</ul>
-</section>
-<hr class="docutils" />
-<section id="execucao-modo-interativo-e-modo-por-flags">
-<h2>2) Execução: modo interativo e modo por flags<a class="headerlink" href="#execucao-modo-interativo-e-modo-por-flags" title="Link permanente para este cabeçalho">#</a></h2>
-<section id="modo-interativo">
-<h3>Modo interativo<a class="headerlink" href="#modo-interativo" title="Link permanente para este cabeçalho">#</a></h3>
-<p>Ao executar sem argumentos, o script lista combinações <strong>Projeto/Estação</strong> e o usuário escolhe um item. O script determina:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">project_code</span></code> (código de rede SDS: <code class="docutils literal notranslate"><span class="pre">BC</span></code>, <code class="docutils literal notranslate"><span class="pre">BL</span></code>, <code class="docutils literal notranslate"><span class="pre">IT</span></code>, <code class="docutils literal notranslate"><span class="pre">MC</span></code>, <code class="docutils literal notranslate"><span class="pre">SP</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">das_code</span></code> (DAS/serial ou código de origem)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">station_type</span></code> (<code class="docutils literal notranslate"><span class="pre">reftek</span></code> ou <code class="docutils literal notranslate"><span class="pre">raspberry</span></code>)</p></li>
-</ul>
-</section>
-<section id="modo-por-flags">
-<h3>Modo por flags<a class="headerlink" href="#modo-por-flags" title="Link permanente para este cabeçalho">#</a></h3>
-<p>Também é possível executar diretamente com:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">&quot;PROJETO&quot;</span></code> e <code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">&quot;ESTACAO&quot;</span></code> para pular o menu</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-y</span> <span class="pre">ANO</span></code> para forçar o ano usado ao buscar o último sincronizado na SDS</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span></code> para forçar a sincronização (ignora último dia sincronizado)</p></li>
-</ul>
-</section>
-</section>
-<hr class="docutils" />
-<section id="determinar-o-ultimo-dia-sincronizado-na-sds">
-<h2>3) Determinar o “último dia sincronizado” na SDS<a class="headerlink" href="#determinar-o-ultimo-dia-sincronizado-na-sds" title="Link permanente para este cabeçalho">#</a></h2>
-<p>O script precisa saber <strong>a partir de qual dia</strong> deve procurar dados novos no pacote.</p>
-<p>Regra padrão (sem <code class="docutils literal notranslate"><span class="pre">-y</span></code> e sem <code class="docutils literal notranslate"><span class="pre">-f</span></code>):</p>
+<section id="objetivo-operacional-do-script">
+<h2>0) Objetivo operacional do script<a class="headerlink" href="#objetivo-operacional-do-script" title="Link permanente para este cabeçalho">#</a></h2>
+<p>O <code class="docutils literal notranslate"><span class="pre">SYNC.sh</span></code> automatiza:</p>
 <ol class="arabic simple">
-<li><p>tenta ano atual (<code class="docutils literal notranslate"><span class="pre">date</span> <span class="pre">+%Y</span></code>)</p></li>
-<li><p>se não houver SDS, tenta ano anterior</p></li>
-</ol>
-<p>A busca é feita no caminho:</p>
+<li><p><strong>Identificação do último dia sincronizado</strong> na SDS (<code class="docutils literal notranslate"><span class="pre">/SDS/&lt;ANO&gt;/&lt;REDE&gt;/&lt;ESTACAO&gt;/HHZ.D</span></code>).</p></li>
+<li><p><strong>Seleção automática do melhor pacote</strong> (ZIP/RAR/TAR/ZIP.BZ2) em <code class="docutils literal notranslate"><span class="pre">ZIP/&lt;ESTACAO&gt;/</span></code> que contenha dados <strong>a partir</strong> do último sincronizado.</p></li>
+<li><p><strong>Processamento específico por tipo de estação</strong>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">/SDS/&lt;ANO&gt;/&lt;project_code&gt;/&lt;ESTACAO&gt;/HHZ.D/</span></code></p></li>
-</ul>
-<p>O “último dia” é obtido a partir do sufixo <code class="docutils literal notranslate"><span class="pre">JJJ</span></code> dos arquivos <code class="docutils literal notranslate"><span class="pre">*.D.&lt;YYYY&gt;.&lt;JJJ&gt;</span></code>.</p>
-<p>Modos especiais:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span></code> (força): define <code class="docutils literal notranslate"><span class="pre">ultimo_sinc=0</span></code> (ignora SDS - Utilizado para testar o fluxo de sincronização em uma coleta já sincronizada)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-y</span> <span class="pre">ANO</span></code>: obriga a busca do último sincronizado no ano informado (Era utilizado quando a busca não tentava ano anterior, hoje não é tão necessário)</p></li>
-</ul>
-</section>
-<hr class="docutils" />
-<section id="selecao-automatica-do-pacote-arquivo-compactado">
-<h2>4) Seleção automática do pacote (arquivo compactado)<a class="headerlink" href="#selecao-automatica-do-pacote-arquivo-compactado" title="Link permanente para este cabeçalho">#</a></h2>
-<p>O script varre <code class="docutils literal notranslate"><span class="pre">ZIP/&lt;ESTACAO&gt;/</span></code> e avalia cada arquivo compactado suportado:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.zip</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.zip.bz2</span></code> (é descompactado para cache em <code class="docutils literal notranslate"><span class="pre">_ARCHIVE_CACHE/</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.rar</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.tar</span></code></p></li>
-</ul>
-<p>Para cada arquivo, ele lista as <strong>datas internas</strong> disponíveis e decide se há dados <strong>≥ ultimo_sinc</strong>.</p>
-<section id="raspberry-shake-interno-do-zip">
-<h3>Raspberry Shake (interno do ZIP)<a class="headerlink" href="#raspberry-shake-interno-do-zip" title="Link permanente para este cabeçalho">#</a></h3>
-<p>Busca paths como:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">/data/archive/&lt;YYYY&gt;/AM/&lt;das_code&gt;/EH[ZEN].D/...</span></code></p></li>
-</ul>
-<p>Dessas entradas extrai pares <code class="docutils literal notranslate"><span class="pre">YYYYJJJ</span></code> (ano + dia juliano).</p>
-</section>
-<section id="reftek-interno-do-zip-rar-tar">
-<h3>REFTEK (interno do ZIP/RAR/TAR)<a class="headerlink" href="#reftek-interno-do-zip-rar-tar" title="Link permanente para este cabeçalho">#</a></h3>
-<p>Procura por pastas no padrão:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">YYYYJJJ/&lt;DAS_CODE&gt;/0</span></code> e <code class="docutils literal notranslate"><span class="pre">YYYYJJJ/&lt;DAS_CODE&gt;/1</span></code></p></li>
-</ul>
-<p>Suporta <code class="docutils literal notranslate"><span class="pre">das_code</span></code> com múltiplos códigos (ex.: <code class="docutils literal notranslate"><span class="pre">&quot;AD20</span> <span class="pre">9789&quot;</span></code>), construindo um <code class="docutils literal notranslate"><span class="pre">code_pattern</span></code>.</p>
-</section>
-<section id="criterio-de-escolha-do-closest">
-<h3>Critério de escolha do “closest”<a class="headerlink" href="#criterio-de-escolha-do-closest" title="Link permanente para este cabeçalho">#</a></h3>
-<p>O pacote escolhido é aquele cujo <strong>primeiro dia novo</strong> (≥ <code class="docutils literal notranslate"><span class="pre">ultimo_sinc</span></code>) tem o menor “diff” em relação ao último sincronizado.
-Em empate, prefere o arquivo com <strong>maior último dia</strong> disponível.</p>
-<p>Ao final, o script imprime:</p>
-<ul class="simple">
-<li><p>arquivo escolhido</p></li>
-<li><p>primeiro dia (YYYYJJJ + data gregoriana)</p></li>
-<li><p>último dia (YYYYJJJ + data gregoriana)</p></li>
-</ul>
-</section>
-</section>
-<hr class="docutils" />
-<section id="processamento-e-publicacao-no-sds">
-<h2>5) Processamento e publicação no SDS<a class="headerlink" href="#processamento-e-publicacao-no-sds" title="Link permanente para este cabeçalho">#</a></h2>
-<p>A execução bifurca por <code class="docutils literal notranslate"><span class="pre">station_type</span></code>.</p>
-<section id="reftek-rt130">
-<h3>5.1) REFTEK (RT130)<a class="headerlink" href="#reftek-rt130" title="Link permanente para este cabeçalho">#</a></h3>
-<section id="a-atalho-zip-ja-contem-sds">
-<h4>(A) Atalho: ZIP já contém <code class="docutils literal notranslate"><span class="pre">/sds/</span></code><a class="headerlink" href="#a-atalho-zip-ja-contem-sds" title="Link permanente para este cabeçalho">#</a></h4>
-<p>Se o arquivo compactado já contém miniSEED/SDS (paths com <code class="docutils literal notranslate"><span class="pre">/sds/</span></code>), o script:</p>
-<ol class="arabic simple">
-<li><p>extrai os miniSEED em <code class="docutils literal notranslate"><span class="pre">target_dir/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_MSEED/</span></code></p></li>
-<li><p>publica via <code class="docutils literal notranslate"><span class="pre">dataselect</span></code> para <code class="docutils literal notranslate"><span class="pre">target_dir/sds/</span></code></p></li>
-<li><p>executa <code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code> e <code class="docutils literal notranslate"><span class="pre">workthisout.sh</span></code></p></li>
-</ol>
-<p>Esse caminho pula a conversão binária.</p>
-</section>
-<section id="b-fluxo-padrao-binario-miniseed-sds">
-<h4>(B) Fluxo padrão (binário → miniSEED → SDS)<a class="headerlink" href="#b-fluxo-padrao-binario-miniseed-sds" title="Link permanente para este cabeçalho">#</a></h4>
-<p>Quando o pacote contém binários:</p>
-<ol class="arabic simple">
-<li><p>Extrai o pacote para <code class="docutils literal notranslate"><span class="pre">target_dir</span></code></p></li>
-<li><p>Move somente o conteúdo a partir de <code class="docutils literal notranslate"><span class="pre">YYYYJJJ/DAS_CODE/</span></code> para:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">binary_dir</span> <span class="pre">=</span> <span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_BINARIES/</span></code></p></li>
+<li><p><strong>REFTEK RT130</strong>: binário → miniSEED → <code class="docutils literal notranslate"><span class="pre">dataselect</span></code> → <code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code> → <code class="docutils literal notranslate"><span class="pre">workthisout.sh</span></code>.</p></li>
+<li><p><strong>Raspberry Shake</strong>: miniSEED → correções (<code class="docutils literal notranslate"><span class="pre">msmod</span></code>) → <code class="docutils literal notranslate"><span class="pre">dataselect</span></code> → <code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code> → <code class="docutils literal notranslate"><span class="pre">workthisout.sh</span></code>.</p></li>
 </ul>
 </li>
-<li><p>Checagem de integridade horária:</p>
-<ul class="simple">
-<li><p>varre diretórios <code class="docutils literal notranslate"><span class="pre">*/&lt;DAS_CODE&gt;/1/</span></code> e verifica se há <strong>24 arquivos</strong> (uma hora por arquivo)</p></li>
-<li><p>bordas (primeiro/último dia da coleta) são tratadas separadamente</p></li>
-</ul>
-</li>
-<li><p>Extrai e ordena informações:</p>
-<ul class="simple">
-<li><p>GPS e bateria a partir de arquivos em <code class="docutils literal notranslate"><span class="pre">*/&lt;DAS_CODE&gt;/0/*</span></code></p></li>
-<li><p>gera <code class="docutils literal notranslate"><span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;.gps</span></code> e <code class="docutils literal notranslate"><span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;.battery</span></code></p></li>
-</ul>
-</li>
-<li><p>Conversão para miniSEED (rt2ms_py3):</p>
-<ul class="simple">
-<li><p>roda modo exploratório (<code class="docutils literal notranslate"><span class="pre">-e</span></code>) para gerar <code class="docutils literal notranslate"><span class="pre">parfile.txt</span></code> e <code class="docutils literal notranslate"><span class="pre">rt2ms.msg</span></code></p></li>
-<li><p>resume substituições automáticas detectadas em <code class="docutils literal notranslate"><span class="pre">rt2ms.msg</span></code> (netcode/canal)</p></li>
-</ul>
-</li>
-<li><p>Validação de <code class="docutils literal notranslate"><span class="pre">parfile.txt</span></code>:</p>
-<ul class="simple">
-<li><p>compara com <code class="docutils literal notranslate"><span class="pre">PARFILES/&lt;ESTACAO&gt;_parfile.txt</span></code> (tolerâncias controladas; ex.: HHN↔HH1, HHE↔HH2)</p></li>
-</ul>
-</li>
-<li><p>Conversão final e publicação:</p>
-<ul class="simple">
-<li><p>gera <code class="docutils literal notranslate"><span class="pre">&lt;NET&gt;.&lt;ESTACAO&gt;.MSEED/</span></code></p></li>
-<li><p>executa <code class="docutils literal notranslate"><span class="pre">dataselect</span></code> + <code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code> + <code class="docutils literal notranslate"><span class="pre">workthisout.sh</span></code></p></li>
-</ul>
-</li>
+<li><p><strong>Rastreabilidade e integridade</strong>: log único por execução, renomeado ao final e enriquecido com <strong>MD5</strong> e tamanhos.</p></li>
 </ol>
 </section>
-</section>
-<section id="raspberry-shake">
-<h3>5.2) Raspberry Shake<a class="headerlink" href="#raspberry-shake" title="Link permanente para este cabeçalho">#</a></h3>
-<ol class="arabic simple">
-<li><p>Lista no ZIP apenas arquivos com dia <strong>≥ ultimo_sinc</strong></p></li>
-<li><p>Extrai miniSEED para <code class="docutils literal notranslate"><span class="pre">MSEED_DIR</span></code></p></li>
-<li><p>Renomeia canais <code class="docutils literal notranslate"><span class="pre">EHZ/EHN/EHE</span></code> → <code class="docutils literal notranslate"><span class="pre">HHZ/HHN/HHE</span></code> e ajusta header com <code class="docutils literal notranslate"><span class="pre">msmod</span></code></p></li>
-<li><p>Publica no SDS com:</p>
+<hr class="docutils" />
+<section id="regras-globais-de-robustez-e-rastreabilidade">
+<h2>1) Regras globais de robustez e rastreabilidade<a class="headerlink" href="#regras-globais-de-robustez-e-rastreabilidade" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="set-euo-pipefail-linha-14">
+<h3>1.1 <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">-euo</span> <span class="pre">pipefail</span></code> (linha 14)<a class="headerlink" href="#set-euo-pipefail-linha-14" title="Link permanente para este cabeçalho">#</a></h3>
+<p>O script impõe:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">dataselect</span></code> → <code class="docutils literal notranslate"><span class="pre">target_dir/sds/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-e</span></code>: aborta ao ocorrer erro (retorno ≠ 0), exceto em construções controladas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-u</span></code>: aborta se variável não definida for expandida.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">pipefail</span></code>: um erro em qualquer comando do <em>pipe</em> propaga falha.</p></li>
+</ul>
+<p><strong>Consequência prática:</strong> para comandos que podem falhar “controladamente”, o script encapsula em <code class="docutils literal notranslate"><span class="pre">run_cmd</span></code> (abaixo) e em alguns <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">!</span> <span class="pre">...;</span> <span class="pre">then</span></code> explícitos.</p>
+</section>
+<section id="run-cmd-linhas-2432">
+<h3>1.2 <code class="docutils literal notranslate"><span class="pre">run_cmd()</span></code> (linhas 24–32)<a class="headerlink" href="#run-cmd-linhas-2432" title="Link permanente para este cabeçalho">#</a></h3>
+<p><strong>Finalidade:</strong> executar um comando preservando o comportamento do <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">-e</span></code>, mas registrando erro no log com timestamp.</p>
+<ul class="simple">
+<li><p>Entrada: <code class="docutils literal notranslate"><span class="pre">run_cmd</span> <span class="pre">&lt;cmd&gt;</span> <span class="pre">&lt;args...&gt;</span></code></p></li>
+<li><p>Saída:</p>
+<ul>
+<li><p>retorna <code class="docutils literal notranslate"><span class="pre">0</span></code> se sucesso;</p></li>
+<li><p>retorna o código original se falha, e registra:</p>
+<ul>
+<li><p>timestamp</p></li>
+<li><p>comando completo</p></li>
+<li><p>status</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>Ponto importante:</strong> <code class="docutils literal notranslate"><span class="pre">run_cmd</span></code> escreve em <code class="docutils literal notranslate"><span class="pre">$log_file</span></code>. O arquivo é definido mais tarde no bloco “CONFIG + MAIN”, mas isso é válido porque a função só é <strong>executada</strong> após a configuração.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="inventario-estatico-estacoes-das-codes-e-projetos">
+<h2>2) Inventário estático: estações, DAS codes e projetos<a class="headerlink" href="#inventario-estatico-estacoes-das-codes-e-projetos" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="listas-por-tipo-linhas-3536">
+<h3>2.1 Listas por tipo (linhas 35–36)<a class="headerlink" href="#listas-por-tipo-linhas-3536" title="Link permanente para este cabeçalho">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reftek_stations</span></code>: estações processadas pelo fluxo RT130.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raspberry_stations</span></code>: estações processadas pelo fluxo Raspberry Shake.</p></li>
+</ul>
+<p>Essas listas alimentam a detecção de <code class="docutils literal notranslate"><span class="pre">station_type</span></code>.</p>
+</section>
+<section id="das-codes-linhas-3847">
+<h3>2.2 <code class="docutils literal notranslate"><span class="pre">das_codes</span></code> (linhas 38–47)<a class="headerlink" href="#das-codes-linhas-3847" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Mapeia <code class="docutils literal notranslate"><span class="pre">ESTACAO</span> <span class="pre">→</span> <span class="pre">DAS_CODE</span></code> (ou serial/código de origem).</p>
+<ul class="simple">
+<li><p>Suporta <strong>múltiplos códigos</strong> em uma mesma estação (valor contendo espaço), por exemplo: <code class="docutils literal notranslate"><span class="pre">&quot;AD20</span> <span class="pre">9789&quot;</span></code>.</p></li>
+<li><p>Esse suporte é consumido por:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">build_code_pattern</span></code> (regex <code class="docutils literal notranslate"><span class="pre">A|B|C</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">split_das_codes</span></code> (array de códigos)</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="projects-project-map-linhas-4966">
+<h3>2.3 <code class="docutils literal notranslate"><span class="pre">projects</span></code> + <code class="docutils literal notranslate"><span class="pre">project_map</span></code> (linhas 49–66)<a class="headerlink" href="#projects-project-map-linhas-4966" title="Link permanente para este cabeçalho">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">projects</span></code>: menu de escolha <strong>Projeto|Estação</strong>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project_map</span></code>: Projeto → código de rede SDS (<code class="docutils literal notranslate"><span class="pre">BC</span></code>, <code class="docutils literal notranslate"><span class="pre">BL</span></code>, <code class="docutils literal notranslate"><span class="pre">IT</span></code>, <code class="docutils literal notranslate"><span class="pre">MC</span></code>, <code class="docutils literal notranslate"><span class="pre">SP</span></code>).</p></li>
+</ul>
+<p>No fluxo, o <code class="docutils literal notranslate"><span class="pre">project_code</span></code> sempre vem de <code class="docutils literal notranslate"><span class="pre">project_map[PROJETO_ESCOLHIDO]</span></code>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="variaveis-globais-para-compatibilidade-com-set-u">
+<h2>3) Variáveis globais (para compatibilidade com <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">-u</span></code>)<a class="headerlink" href="#variaveis-globais-para-compatibilidade-com-set-u" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="globais-inicializadas-com-string-vazia-linhas-7188">
+<h3>3.1 Globais inicializadas com string vazia (linhas 71–88)<a class="headerlink" href="#globais-inicializadas-com-string-vazia-linhas-7188" title="Link permanente para este cabeçalho">#</a></h3>
+<p>O script define antecipadamente (vazio) variáveis que serão preenchidas no <code class="docutils literal notranslate"><span class="pre">main</span></code>:</p>
+<ul class="simple">
+<li><p>Identidade / contexto:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">PROJETO_ESCOLHIDO</span></code>, <code class="docutils literal notranslate"><span class="pre">ESTACAO_ESCOLHIDA</span></code>, <code class="docutils literal notranslate"><span class="pre">ANO_FORCADO</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project_code</span></code>, <code class="docutils literal notranslate"><span class="pre">das_code</span></code>, <code class="docutils literal notranslate"><span class="pre">origin_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">station_type</span></code></p></li>
+</ul>
+</li>
+<li><p>Seleção do pacote:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">closest_zip</span></code>, <code class="docutils literal notranslate"><span class="pre">closest_zip_orig</span></code>, <code class="docutils literal notranslate"><span class="pre">closest_date</span></code>, <code class="docutils literal notranslate"><span class="pre">last_date</span></code></p></li>
+</ul>
+</li>
+<li><p>Estado SDS:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ultimo_sinc</span></code>, <code class="docutils literal notranslate"><span class="pre">ano_sinc</span></code></p></li>
+</ul>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">code_pattern</span></code></strong>: inicializado como <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> (linhas 80–81) para não quebrar <code class="docutils literal notranslate"><span class="pre">-u</span></code>.</p></li>
+</ul>
+<p><strong>Invariante importante do fluxo:</strong> antes de procurar datas REFTEK em arquivos compactados, <code class="docutils literal notranslate"><span class="pre">code_pattern</span></code> precisa estar <strong>não vazio</strong>, pois vira a lista de DAS codes aceitos (formato <code class="docutils literal notranslate"><span class="pre">A|B|C</span></code>).</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="suporte-a-multiplos-das-code">
+<h2>4) Suporte a múltiplos DAS_CODE<a class="headerlink" href="#suporte-a-multiplos-das-code" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="build-code-pattern-linhas-93104">
+<h3>4.1 <code class="docutils literal notranslate"><span class="pre">build_code_pattern()</span></code> (linhas 93–104)<a class="headerlink" href="#build-code-pattern-linhas-93104" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Transforma uma string com possíveis múltiplos códigos (separados por espaço) em uma alternativa regex com <code class="docutils literal notranslate"><span class="pre">|</span></code>.</p>
+<ul class="simple">
+<li><p>Entrada: <code class="docutils literal notranslate"><span class="pre">&quot;AD20</span> <span class="pre">9789&quot;</span></code></p></li>
+<li><p>Saída: <code class="docutils literal notranslate"><span class="pre">&quot;AD20|9789&quot;</span></code></p></li>
+</ul>
+<p>Esse padrão é usado pela extração de datas REFTEK em qualquer profundidade (função <code class="docutils literal notranslate"><span class="pre">extract_reftek_dates_any_depth</span></code>).</p>
+</section>
+<section id="split-das-codes-linhas-107110">
+<h3>4.2 <code class="docutils literal notranslate"><span class="pre">split_das_codes()</span></code> (linhas 107–110)<a class="headerlink" href="#split-das-codes-linhas-107110" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Gera o array global <code class="docutils literal notranslate"><span class="pre">_CODES_SPLIT</span></code> com os DAS codes individuais.</p>
+<p>É usado principalmente dentro do <code class="docutils literal notranslate"><span class="pre">processar_reftek</span></code> para montar buscas com <code class="docutils literal notranslate"><span class="pre">find</span></code>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="funcoes-utilitarias-gerais">
+<h2>5) Funções utilitárias gerais<a class="headerlink" href="#funcoes-utilitarias-gerais" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="log-debug-linha-115">
+<h3>5.1 <code class="docutils literal notranslate"><span class="pre">log_debug()</span></code> (linha 115)<a class="headerlink" href="#log-debug-linha-115" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Imprime mensagens de debug quando <code class="docutils literal notranslate"><span class="pre">VERBOSE=1</span></code> (definido no main).</p>
+</section>
+<section id="dia-juliano-linha-117">
+<h3>5.2 <code class="docutils literal notranslate"><span class="pre">dia_juliano()</span></code> (linha 117)<a class="headerlink" href="#dia-juliano-linha-117" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Converte data gregoriana para dia juliano via <code class="docutils literal notranslate"><span class="pre">date</span> <span class="pre">-d</span> <span class="pre">...</span> <span class="pre">+%j</span></code>.</p>
+<p><strong>Observação:</strong> no script atual, ela está definida mas não é chamada em nenhum ponto.</p>
+</section>
+<section id="is-station-in-list-linhas-119128">
+<h3>5.3 <code class="docutils literal notranslate"><span class="pre">is_station_in_list()</span></code> (linhas 119–128)<a class="headerlink" href="#is-station-in-list-linhas-119128" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Checa pertencimento de uma estação em uma lista (retorno 0/1).</p>
+<p>É usada para classificar <code class="docutils literal notranslate"><span class="pre">station_type</span></code>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="selecao-projeto-estacao-modo-interativo">
+<h2>6) Seleção Projeto/Estação (modo interativo)<a class="headerlink" href="#selecao-projeto-estacao-modo-interativo" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="seleciona-projeto-estacao-linhas-131167">
+<h3>6.1 <code class="docutils literal notranslate"><span class="pre">seleciona_projeto_estacao()</span></code> (linhas 131–167)<a class="headerlink" href="#seleciona-projeto-estacao-linhas-131167" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Fluxo:</p>
+<ol class="arabic simple">
+<li><p>Imprime menu enumerando <code class="docutils literal notranslate"><span class="pre">projects</span></code>.</p></li>
+<li><p>Lê a opção do usuário.</p></li>
+<li><p>Deriva e define:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">PROJETO_ESCOLHIDO</span></code>, <code class="docutils literal notranslate"><span class="pre">ESTACAO_ESCOLHIDA</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project_code</span></code> via <code class="docutils literal notranslate"><span class="pre">project_map</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">das_code</span></code> via <code class="docutils literal notranslate"><span class="pre">das_codes</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">origin_dir</span> <span class="pre">=</span> <span class="pre">$base_dir/ZIP/$ESTACAO_ESCOLHIDA</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Define <code class="docutils literal notranslate"><span class="pre">code_pattern</span></code> obrigatoriamente</strong> (linhas 151–153):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">code_pattern=&quot;$(build_code_pattern</span> <span class="pre">&quot;$das_code&quot;)&quot;</span></code></p></li>
+<li><p>aborta se ficar vazio</p></li>
+</ul>
+</li>
+<li><p>Classifica <code class="docutils literal notranslate"><span class="pre">station_type</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reftek</span></code> se estação está em <code class="docutils literal notranslate"><span class="pre">reftek_stations</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raspberry</span></code> se está em <code class="docutils literal notranslate"><span class="pre">raspberry_stations</span></code></p></li>
+<li><p>aborta se não reconhecida</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>Efeito no resto do script:</strong> após esta função, o contexto mínimo do processamento está fechado: rede SDS (<code class="docutils literal notranslate"><span class="pre">project_code</span></code>), estação, DAS code(s), tipo.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="determinar-o-ultimo-sincronizado-na-sds">
+<h2>7) Determinar o último sincronizado na SDS<a class="headerlink" href="#determinar-o-ultimo-sincronizado-na-sds" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="obter-ultimo-sinc-linhas-169212">
+<h3>7.1 <code class="docutils literal notranslate"><span class="pre">obter_ultimo_sinc()</span></code> (linhas 169–212)<a class="headerlink" href="#obter-ultimo-sinc-linhas-169212" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Esta função define o ponto de partida “a partir de onde procurar dados novos”.</p>
+<section id="caso-a-sincronizacao-forcada-force-sync-1-linhas-170179">
+<h4>Caso A — sincronização forçada (<code class="docutils literal notranslate"><span class="pre">FORCE_SYNC=1</span></code>) (linhas 170–179)<a class="headerlink" href="#caso-a-sincronizacao-forcada-force-sync-1-linhas-170179" title="Link permanente para este cabeçalho">#</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ano_sinc</span> <span class="pre">=</span> <span class="pre">ano</span> <span class="pre">atual</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ultimo_sinc</span> <span class="pre">=</span> <span class="pre">0</span></code></p></li>
+</ul>
+<p>Isso faz com que qualquer pacote com datas internas seja considerado “novo”.</p>
+</section>
+<section id="caso-b-regra-padrao-linhas-181211">
+<h4>Caso B — regra padrão (linhas 181–211)<a class="headerlink" href="#caso-b-regra-padrao-linhas-181211" title="Link permanente para este cabeçalho">#</a></h4>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ano_atual</span> <span class="pre">=</span> <span class="pre">date</span> <span class="pre">+%Y</span></code></p></li>
+<li><p>tenta:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ano_atual</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ano_atual</span> <span class="pre">-</span> <span class="pre">1</span></code></p></li>
+</ul>
+</li>
+<li><p>Para cada ano, checa o diretório:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/SDS/&lt;ANO&gt;/&lt;project_code&gt;/&lt;ESTACAO_ESCOLHIDA&gt;/HHZ.D</span></code></p></li>
+</ul>
+</li>
+<li><p>Se existir, obtém o último <code class="docutils literal notranslate"><span class="pre">JJJ</span></code> presente:</p>
+<ul class="simple">
+<li><p>lista arquivos</p></li>
+<li><p>extrai último campo após <code class="docutils literal notranslate"><span class="pre">.</span></code> (<code class="docutils literal notranslate"><span class="pre">awk</span> <span class="pre">-F'.'</span> <span class="pre">'{print</span> <span class="pre">$NF}'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sort</span> <span class="pre">-u</span> <span class="pre">|</span> <span class="pre">tail</span> <span class="pre">-n1</span></code></p></li>
+</ul>
+</li>
+</ol>
+<p>Resultado:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ano_sinc</span> <span class="pre">=</span> <span class="pre">ano</span> <span class="pre">encontrado</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ultimo_sinc</span> <span class="pre">=</span> <span class="pre">último</span> <span class="pre">JJJ</span> <span class="pre">encontrado</span></code></p></li>
+</ul>
+<p><strong>Ponto operacional:</strong> esse <code class="docutils literal notranslate"><span class="pre">ultimo_sinc</span></code> é comparado com as datas internas dos pacotes para decidir o que é “novo”.</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="suporte-a-arquivos-compactados-e-listagem-de-paths-internos">
+<h2>8) Suporte a arquivos compactados e listagem de paths internos<a class="headerlink" href="#suporte-a-arquivos-compactados-e-listagem-de-paths-internos" title="Link permanente para este cabeçalho">#</a></h2>
+<p>Esses blocos são usados pela seleção automática do pacote “closest”.</p>
+<section id="prepare-archive-linhas-214247">
+<h3>8.1 <code class="docutils literal notranslate"><span class="pre">prepare_archive()</span></code> (linhas 214–247)<a class="headerlink" href="#prepare-archive-linhas-214247" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Normaliza a entrada e define 3 globais:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ARCH_ORIG</span></code>: caminho original do arquivo</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARCH_FILE</span></code>: arquivo que será efetivamente inspecionado</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARCH_KIND</span></code>: <code class="docutils literal notranslate"><span class="pre">zip|rar|tar</span></code></p></li>
+</ul>
+<p>Casos:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">*.zip.bz2</span></code>:</p>
+<ul>
+<li><p>descompacta para cache em <code class="docutils literal notranslate"><span class="pre">$base_dir/_ARCHIVE_CACHE/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARCH_FILE</span></code> vira o <code class="docutils literal notranslate"><span class="pre">.zip</span></code> descompactado</p></li>
+<li><p>valida integridade via <code class="docutils literal notranslate"><span class="pre">unzip</span> <span class="pre">-tqq</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*.zip</span></code>, <code class="docutils literal notranslate"><span class="pre">*.rar</span></code>, <code class="docutils literal notranslate"><span class="pre">*.tar</span></code>: define <code class="docutils literal notranslate"><span class="pre">ARCH_KIND</span></code> e usa o próprio arquivo</p></li>
+<li><p>outros: retorna <code class="docutils literal notranslate"><span class="pre">2</span></code> (extensão não suportada)</p></li>
+</ul>
+</section>
+<section id="list-archive-paths-linhas-249258">
+<h3>8.2 <code class="docutils literal notranslate"><span class="pre">list_archive_paths()</span></code> (linhas 249–258)<a class="headerlink" href="#list-archive-paths-linhas-249258" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Lista caminhos internos sem extrair:</p>
+<ul class="simple">
+<li><p>zip: <code class="docutils literal notranslate"><span class="pre">unzip</span> <span class="pre">-Z1</span></code></p></li>
+<li><p>rar: <code class="docutils literal notranslate"><span class="pre">unrar</span> <span class="pre">lb</span> <span class="pre">-p-</span></code></p></li>
+<li><p>tar: <code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">-tf</span></code></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="extracao-de-datas-internas-do-pacote">
+<h2>9) Extração de “datas internas” do pacote<a class="headerlink" href="#extracao-de-datas-internas-do-pacote" title="Link permanente para este cabeçalho">#</a></h2>
+<p>A seleção do pacote depende de conseguir extrair <strong>quais dias (YYYYJJJ)</strong> existem dentro do arquivo.</p>
+<section id="raspberry-extract-dates-from-rasp-linhas-260273">
+<h3>9.1 Raspberry: <code class="docutils literal notranslate"><span class="pre">extract_dates_from_rasp()</span></code> (linhas 260–273)<a class="headerlink" href="#raspberry-extract-dates-from-rasp-linhas-260273" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Procura entradas no padrão:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/data/archive/&lt;YYYY&gt;/AM/&lt;das_code&gt;/EH[ZEN].D/</span></code></p></li>
+</ul>
+<p>Extrai <code class="docutils literal notranslate"><span class="pre">YYYY</span></code> e <code class="docutils literal notranslate"><span class="pre">JJJ</span></code> do final do path (parte <code class="docutils literal notranslate"><span class="pre">...&lt;YYYY&gt;.&lt;JJJ&gt;</span></code>), retornando <code class="docutils literal notranslate"><span class="pre">YYYYJJJ</span></code> ordenado e único.</p>
+</section>
+<section id="reftek-qualquer-profundidade-extract-reftek-dates-any-depth-linhas-275305">
+<h3>9.2 REFTEK (qualquer profundidade): <code class="docutils literal notranslate"><span class="pre">extract_reftek_dates_any_depth()</span></code> (linhas 275–305)<a class="headerlink" href="#reftek-qualquer-profundidade-extract-reftek-dates-any-depth-linhas-275305" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Objetivo: encontrar diretórios que indiquem a presença de dados no padrão REFTEK:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">YYYYJJJ/&lt;DAS&gt;/0</span></code> e <code class="docutils literal notranslate"><span class="pre">YYYYJJJ/&lt;DAS&gt;/1</span></code></p></li>
+</ul>
+<p>Características:</p>
+<ul class="simple">
+<li><p>não assume profundidade fixa (funciona se o pacote tiver prefixos extras)</p></li>
+<li><p>trata paths com <code class="docutils literal notranslate"><span class="pre">./</span></code> no início</p></li>
+<li><p>aceita múltiplos DAS via <code class="docutils literal notranslate"><span class="pre">codes_pat</span></code> (<code class="docutils literal notranslate"><span class="pre">A|B|C</span></code>)</p></li>
+<li><p>aceita <code class="docutils literal notranslate"><span class="pre">YYYYJJJ</span></code> com sufixo (<code class="docutils literal notranslate"><span class="pre">YYYYJJJ_...</span></code>), mas reduz para os 7 dígitos depois</p></li>
+</ul>
+<p>Saída: lista de “datas brutas” (o token do <code class="docutils literal notranslate"><span class="pre">YYYYJJJ</span></code> possivelmente com sufixo), depois o chamador normaliza para <code class="docutils literal notranslate"><span class="pre">YYYYJJJ</span></code> puro.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="selecao-automatica-do-pacote-closest">
+<h2>10) Seleção automática do pacote “closest”<a class="headerlink" href="#selecao-automatica-do-pacote-closest" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="encontrar-closest-zip-linhas-308408">
+<h3>10.1 <code class="docutils literal notranslate"><span class="pre">encontrar_closest_zip()</span></code> (linhas 308–408)<a class="headerlink" href="#encontrar-closest-zip-linhas-308408" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Percorre todos os arquivos em <code class="docutils literal notranslate"><span class="pre">ZIP/&lt;ESTACAO&gt;/</span></code> e escolhe o melhor candidato com base no último sincronizado.</p>
+<section id="inicializacao-linhas-309323">
+<h4>10.1.1 Inicialização (linhas 309–323)<a class="headerlink" href="#inicializacao-linhas-309323" title="Link permanente para este cabeçalho">#</a></h4>
+<ul class="simple">
+<li><p>define <code class="docutils literal notranslate"><span class="pre">best_diff=999</span></code></p></li>
+<li><p>zera variáveis globais de seleção</p></li>
+<li><p>garante <code class="docutils literal notranslate"><span class="pre">das_code</span></code> e <code class="docutils literal notranslate"><span class="pre">code_pattern</span></code> não vazios</p></li>
+<li><p>ativa <code class="docutils literal notranslate"><span class="pre">nullglob</span></code> para o loop não iterar literal <code class="docutils literal notranslate"><span class="pre">*</span></code> se diretório vazio</p></li>
+</ul>
+</section>
+<section id="loop-por-arquivo-linhas-325396">
+<h4>10.1.2 Loop por arquivo (linhas 325–396)<a class="headerlink" href="#loop-por-arquivo-linhas-325396" title="Link permanente para este cabeçalho">#</a></h4>
+<p>Para cada <code class="docutils literal notranslate"><span class="pre">arquivo</span></code>:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">prepare_archive</span> <span class="pre">arquivo</span></code></p>
+<ul class="simple">
+<li><p>se extensão não suportada: pula</p></li>
+</ul>
+</li>
+<li><p>extrai datas internas conforme <code class="docutils literal notranslate"><span class="pre">station_type</span></code>:</p>
+<ul class="simple">
+<li><p>Raspberry: <code class="docutils literal notranslate"><span class="pre">extract_dates_from_rasp</span></code></p></li>
+<li><p>Reftek: <code class="docutils literal notranslate"><span class="pre">extract_reftek_dates_any_depth</span></code></p></li>
+</ul>
+</li>
+<li><p>normaliza para <code class="docutils literal notranslate"><span class="pre">YYYYJJJ</span></code> puro (remove sufixos) e ordena (linhas 356–362)</p></li>
+<li><p>filtra datas “novas” (linhas 367–376):</p>
+<ul class="simple">
+<li><p>mantém <code class="docutils literal notranslate"><span class="pre">dia</span></code> com <code class="docutils literal notranslate"><span class="pre">JJJ</span> <span class="pre">&gt;=</span> <span class="pre">ultimo_sinc</span></code></p></li>
+<li><p>usa <code class="docutils literal notranslate"><span class="pre">10#</span></code> para evitar interpretação octal (ex.: <code class="docutils literal notranslate"><span class="pre">008</span></code>)</p></li>
+</ul>
+</li>
+<li><p>define:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">first_new</span></code> = primeiro dia novo</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">last_new</span></code> = último dia novo</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">diff</span> <span class="pre">=</span> <span class="pre">first_new.JJJ</span> <span class="pre">-</span> <span class="pre">ultimo_sinc</span></code></p></li>
+</ul>
+</li>
+<li><p>atualiza o “melhor” candidato:</p>
+<ul class="simple">
+<li><p>menor <code class="docutils literal notranslate"><span class="pre">diff</span></code> vence</p></li>
+<li><p>empate em <code class="docutils literal notranslate"><span class="pre">diff</span></code>: maior <code class="docutils literal notranslate"><span class="pre">last_new</span></code> vence</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="resultado-consolidado-linhas-398407">
+<h4>10.1.3 Resultado consolidado (linhas 398–407)<a class="headerlink" href="#resultado-consolidado-linhas-398407" title="Link permanente para este cabeçalho">#</a></h4>
+<p>Após o loop, define:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">closest_zip</span></code> (arquivo efetivo, já “normalizado” pelo cache se <code class="docutils literal notranslate"><span class="pre">.zip.bz2</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">closest_zip_orig</span></code> (arquivo original)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">closest_date</span></code> (primeiro dia “novo” no arquivo)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">last_date</span></code> (último dia disponível no arquivo)</p></li>
+</ul>
+<p>E imprime também as datas gregorianas derivadas de <code class="docutils literal notranslate"><span class="pre">YYYYJJJ</span></code>.</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="validacao-e-tolerancias-do-parfile-bloco-transversal-do-reftek">
+<h2>11) Validação e tolerâncias do <code class="docutils literal notranslate"><span class="pre">parfile</span></code> (bloco transversal do REFTEK)<a class="headerlink" href="#validacao-e-tolerancias-do-parfile-bloco-transversal-do-reftek" title="Link permanente para este cabeçalho">#</a></h2>
+<p>Estas funções não fazem a seleção do pacote; elas entram no <strong>fluxo REFTEK</strong> após o modo exploratório do <code class="docutils literal notranslate"><span class="pre">rt2ms</span></code>.</p>
+<section id="comparar-parfiles-com-tolerancia-linhas-413534">
+<h3>11.1 <code class="docutils literal notranslate"><span class="pre">comparar_parfiles_com_tolerancia()</span></code> (linhas 413–534)<a class="headerlink" href="#comparar-parfiles-com-tolerancia-linhas-413534" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Compara <code class="docutils literal notranslate"><span class="pre">parfile.txt</span></code> gerado vs template <code class="docutils literal notranslate"><span class="pre">PARFILES/&lt;ESTACAO&gt;_parfile.txt</span></code>.</p>
+<p>Regras-chave:</p>
+<ul class="simple">
+<li><p>cabeçalho deve ser idêntico</p></li>
+<li><p>compara somente <code class="docutils literal notranslate"><span class="pre">refstrm</span> <span class="pre">==</span> <span class="pre">1</span></code></p></li>
+<li><p>tolerâncias:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">NETCODE</span></code>: aceita equivalência case-insensitive e aceita exploratório <code class="docutils literal notranslate"><span class="pre">xx</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CHANNEL</span></code>: permite equivalência <code class="docutils literal notranslate"><span class="pre">HHN</span> <span class="pre">↔</span> <span class="pre">HH1</span></code> e <code class="docutils literal notranslate"><span class="pre">HHE</span> <span class="pre">↔</span> <span class="pre">HH2</span></code> (case-insensitive)</p></li>
+</ul>
+</li>
+<li><p>outros campos (<code class="docutils literal notranslate"><span class="pre">STATION</span></code>, <code class="docutils literal notranslate"><span class="pre">LOC</span></code>, <code class="docutils literal notranslate"><span class="pre">SR</span></code>, <code class="docutils literal notranslate"><span class="pre">GAIN</span></code>, <code class="docutils literal notranslate"><span class="pre">IMPLEMENT_TIME</span></code>) devem bater</p></li>
+</ul>
+<p>Falhas geram <code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">!=</span> <span class="pre">0</span></code>, abortando o script (por <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">-e</span></code> no chamador).</p>
+</section>
+<section id="resumir-auto-substituicoes-parfile-linhas-537579">
+<h3>11.2 <code class="docutils literal notranslate"><span class="pre">resumir_auto_substituicoes_parfile()</span></code> (linhas 537–579)<a class="headerlink" href="#resumir-auto-substituicoes-parfile-linhas-537579" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Lê <code class="docutils literal notranslate"><span class="pre">rt2ms.msg</span></code> e imprime no log um resumo humano quando o <code class="docutils literal notranslate"><span class="pre">rt2ms</span></code> tiver substituído automaticamente:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NETCODE</span></code> inválido → default</p></li>
+<li><p>canal inválido → rename</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="fluxo-especifico-reftek-funcoes-auxiliares-de-inspecao-interna">
+<h2>12) Fluxo específico: REFTEK (funções auxiliares de inspeção interna)<a class="headerlink" href="#fluxo-especifico-reftek-funcoes-auxiliares-de-inspecao-interna" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="find-reftek-dirs-stream1-linhas-581594">
+<h3>12.1 <code class="docutils literal notranslate"><span class="pre">find_reftek_dirs_stream1()</span></code> (linhas 581–594)<a class="headerlink" href="#find-reftek-dirs-stream1-linhas-581594" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Busca diretórios <code class="docutils literal notranslate"><span class="pre">*/&lt;DAS&gt;/1</span></code> abaixo de um root (tipicamente o <code class="docutils literal notranslate"><span class="pre">binary_dir</span></code>).</p>
+<p>Uso: verificação de integridade horária (espera 24 arquivos por diretório-hora).</p>
+</section>
+<section id="find-reftek-files-stream0-linhas-596609">
+<h3>12.2 <code class="docutils literal notranslate"><span class="pre">find_reftek_files_stream0()</span></code> (linhas 596–609)<a class="headerlink" href="#find-reftek-files-stream0-linhas-596609" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Busca arquivos <code class="docutils literal notranslate"><span class="pre">*/&lt;DAS&gt;/0/*</span></code> (tipicamente logs SH) para extrair GPS e bateria.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="fluxo-reftek-visao-de-blocos">
+<h2>13) Fluxo REFTEK (visão de blocos)<a class="headerlink" href="#fluxo-reftek-visao-de-blocos" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="processar-reftek-linhas-611778">
+<h3>13.1 <code class="docutils literal notranslate"><span class="pre">processar_reftek()</span></code> (linhas 611–778)<a class="headerlink" href="#processar-reftek-linhas-611778" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Este bloco é executado quando <code class="docutils literal notranslate"><span class="pre">station_type=&quot;reftek&quot;</span></code> e o atalho “/sds/ no ZIP” não se aplica.</p>
+<p>Etapas principais:</p>
+<ol class="arabic simple">
+<li><p><strong>Deriva intervalo de coleta</strong> a partir de <code class="docutils literal notranslate"><span class="pre">closest_date</span></code> e <code class="docutils literal notranslate"><span class="pre">last_date</span></code> e cria:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">target_dir</span> <span class="pre">=</span> <span class="pre">$base_dir/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">binary_dir</span> <span class="pre">=</span> <span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_BINARIES</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Descompacta</strong> <code class="docutils literal notranslate"><span class="pre">closest_zip</span></code> em <code class="docutils literal notranslate"><span class="pre">target_dir</span></code> (zip/rar/tar).</p></li>
+<li><p><strong>Move</strong> apenas a subárvore a partir de <code class="docutils literal notranslate"><span class="pre">YYYYJJJ/DASCODE/</span></code> para dentro de <code class="docutils literal notranslate"><span class="pre">binary_dir</span></code>:</p>
+<ul class="simple">
+<li><p>preserva <code class="docutils literal notranslate"><span class="pre">YYYYJJJ/DASCODE/...</span></code> dentro do BINARIES</p></li>
+<li><p>remove diretórios vazios remanescentes</p></li>
+</ul>
+</li>
+<li><p><strong>Checagem de integridade horária</strong>:</p>
+<ul class="simple">
+<li><p>varre <code class="docutils literal notranslate"><span class="pre">*/DAS/1</span></code></p></li>
+<li><p>se <code class="docutils literal notranslate"><span class="pre">count_files</span> <span class="pre">!=</span> <span class="pre">24</span></code>, marca como:</p>
+<ul>
+<li><p>“BORDA DE COLETA” se for o primeiro/último dia do intervalo</p></li>
+<li><p>“ARQUIVOS INCOMPLETOS” caso contrário</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Extração de GPS/BATTERY</strong> a partir de <code class="docutils literal notranslate"><span class="pre">*/DAS/0/*</span></code>:</p>
+<ul class="simple">
+<li><p>agrega em <code class="docutils literal notranslate"><span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_info.log</span></code></p></li>
+<li><p>gera ordenados:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;.gps</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;.battery</span></code></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Conversão binário → miniSEED</strong> via <code class="docutils literal notranslate"><span class="pre">rt2ms_py3</span></code> em 2 fases:</p>
+<ul class="simple">
+<li><p>modo exploratório <code class="docutils literal notranslate"><span class="pre">-e</span></code> para gerar <code class="docutils literal notranslate"><span class="pre">parfile.txt</span></code> + <code class="docutils literal notranslate"><span class="pre">rt2ms.msg</span></code></p></li>
+<li><p>valida <code class="docutils literal notranslate"><span class="pre">parfile.txt</span></code> contra template (se existir)</p></li>
+<li><p>conversão final com <code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">template</span> <span class="pre">-o</span> <span class="pre">&lt;NET&gt;.&lt;ESTACAO&gt;.MSEED</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Publicação em SDS local</strong> e pipeline SeisComP:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dataselect</span></code> (constrói <code class="docutils literal notranslate"><span class="pre">target_dir/sds</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code> (gera log de clone)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workthisout.sh</span> <span class="pre">--nostop</span></code> (publishes/organiza)</p></li>
+</ul>
+</li>
+</ol>
+<p>Saída operacional: SDS pronta em <code class="docutils literal notranslate"><span class="pre">target_dir/sds/</span></code>, logs prontos para consolidação em <code class="docutils literal notranslate"><span class="pre">finalizar_log</span></code>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="fluxo-raspberry-shake-visao-de-blocos">
+<h2>14) Fluxo Raspberry Shake (visão de blocos)<a class="headerlink" href="#fluxo-raspberry-shake-visao-de-blocos" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="processar-raspberry-linhas-781836">
+<h3>14.1 <code class="docutils literal notranslate"><span class="pre">processar_raspberry()</span></code> (linhas 781–836)<a class="headerlink" href="#processar-raspberry-linhas-781836" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Etapas principais:</p>
+<ol class="arabic simple">
+<li><p>Define <code class="docutils literal notranslate"><span class="pre">target_dir</span> <span class="pre">=</span> <span class="pre">$base_dir/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;</span></code> (baseado em <code class="docutils literal notranslate"><span class="pre">last_date</span></code>).</p></li>
+<li><p>Lista no ZIP apenas arquivos com <code class="docutils literal notranslate"><span class="pre">JJJ</span> <span class="pre">&gt;=</span> <span class="pre">ultimo_sinc</span></code> e extrai para:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MSEED_DIR</span> <span class="pre">=</span> <span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_MSEED</span></code></p></li>
+</ul>
+</li>
+<li><p>Renomeia e corrige headers:</p>
+<ul class="simple">
+<li><p>canais <code class="docutils literal notranslate"><span class="pre">EHZ/EHN/EHE</span></code> → <code class="docutils literal notranslate"><span class="pre">HHZ/HHN/HHE</span></code></p></li>
+<li><p>ajusta NET/STA/LOC/CHAN com <code class="docutils literal notranslate"><span class="pre">msmod</span></code></p></li>
+<li><p>remove arquivo original após criar o novo nome</p></li>
+</ul>
+</li>
+<li><p>Publica com:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dataselect</span></code> para <code class="docutils literal notranslate"><span class="pre">target_dir/sds/</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">workthisout.sh</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workthisout.sh</span> <span class="pre">--nostop</span></code></p></li>
 </ul>
 </li>
 </ol>
 </section>
 </section>
 <hr class="docutils" />
-<section id="logs-e-rastreabilidade">
-<h2>6) Logs e rastreabilidade<a class="headerlink" href="#logs-e-rastreabilidade" title="Link permanente para este cabeçalho">#</a></h2>
-<p>No início, o script abre um log em <code class="docutils literal notranslate"><span class="pre">LOGS/test.log</span></code> e redireciona stdout/stderr para o log.</p>
-<p>Ao final, ele consolida informações e renomeia o log para:</p>
+<section id="finalizacao-e-rastreabilidade-do-log">
+<h2>15) Finalização e rastreabilidade do log<a class="headerlink" href="#finalizacao-e-rastreabilidade-do-log" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="finalizar-log-linhas-839886">
+<h3>15.1 <code class="docutils literal notranslate"><span class="pre">finalizar_log()</span></code> (linhas 839–886)<a class="headerlink" href="#finalizar-log-linhas-839886" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Consolida o log e cria uma chave única da execução:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">key</span> <span class="pre">=</span> <span class="pre">&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_&lt;HHMM&gt;</span></code></p></li>
+</ul>
+<p>Ações:</p>
+<ol class="arabic simple">
+<li><p>calcula e registra no log:</p>
+<ul class="simple">
+<li><p>tamanho do <code class="docutils literal notranslate"><span class="pre">target_dir/sds</span></code> (se existir)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">md5sum</span></code> e tamanho do pacote de entrada (preferindo <code class="docutils literal notranslate"><span class="pre">closest_zip_orig</span></code>)</p></li>
+</ul>
+</li>
+<li><p>renomeia o log principal:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">LOGS/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_&lt;HHMM&gt;_sync.log</span></code></p></li>
 </ul>
-<p>No log final também entram:</p>
+</li>
+<li><p>move anexos RT130:</p>
 <ul class="simple">
-<li><p>MD5 do arquivo de entrada (pacote escolhido)</p></li>
-<li><p>tamanho do pacote</p></li>
-<li><p>tamanho do <code class="docutils literal notranslate"><span class="pre">target_dir/sds</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_dir/LOGS/RT130_*.log</span></code> → <code class="docutils literal notranslate"><span class="pre">LOGS/&lt;key&gt;_RT130_....log</span></code></p></li>
 </ul>
-<p>Além disso:</p>
+</li>
+<li><p>renomeia o log r2m (se existir):</p>
 <ul class="simple">
-<li><p>move <code class="docutils literal notranslate"><span class="pre">RT130_*.log</span></code> gerados durante o processo para <code class="docutils literal notranslate"><span class="pre">LOGS/</span></code> com o mesmo prefixo do <code class="docutils literal notranslate"><span class="pre">_sync.log</span></code></p></li>
-<li><p>renomeia o log do dataselect/rt2ms (quando existir) para <code class="docutils literal notranslate"><span class="pre">*_r2m.log</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOGS/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_&lt;HHMM&gt;_r2m.log</span></code></p></li>
+</ul>
+</li>
+<li><p>grava timestamp final “Sincronização concluída”.</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="bloco-config-main-controle-do-fluxo">
+<h2>16) Bloco CONFIG + MAIN (controle do fluxo)<a class="headerlink" href="#bloco-config-main-controle-do-fluxo" title="Link permanente para este cabeçalho">#</a></h2>
+<section id="configuracao-de-diretorios-e-log-linhas-891899">
+<h3>16.1 Configuração de diretórios e log (linhas 891–899)<a class="headerlink" href="#configuracao-de-diretorios-e-log-linhas-891899" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Define o ambiente de execução:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">base_dir=&quot;$HOME/TMP/SYNC&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_dir=&quot;$base_dir/LOGS&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PARFILES_DIR=&quot;$base_dir/PARFILES/&quot;</span></code></p></li>
+</ul>
+<p>E ativa o <em>capture</em> integral:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">exec</span> <span class="pre">&gt;</span> <span class="pre">&gt;(tee</span> <span class="pre">-a</span> <span class="pre">&quot;$log_file&quot;)</span> <span class="pre">2&gt;&amp;1</span></code></p></li>
+</ul>
+<p>A partir daqui, <strong>tudo</strong> que o script imprime vai para o arquivo e para o stdout.</p>
+</section>
+<section id="cli-e-modos-de-execucao-linhas-901930">
+<h3>16.2 CLI e modos de execução (linhas 901–930)<a class="headerlink" href="#cli-e-modos-de-execucao-linhas-901930" title="Link permanente para este cabeçalho">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">usage()</span></code> define flags:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">-p</span></code> projeto, <code class="docutils literal notranslate"><span class="pre">-e</span></code> estação</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-y</span></code> ano forçado</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span></code> força sync</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-h</span></code> ajuda</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">getopts</span></code> popula variáveis globais.</p></li>
+</ul>
+</section>
+<section id="selecao-do-contexto-linhas-932967">
+<h3>16.3 Seleção do contexto (linhas 932–967)<a class="headerlink" href="#selecao-do-contexto-linhas-932967" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Caso <code class="docutils literal notranslate"><span class="pre">-p</span></code> e <code class="docutils literal notranslate"><span class="pre">-e</span></code> tenham sido fornecidos:</p>
+<ol class="arabic simple">
+<li><p>valida se a combinação existe em <code class="docutils literal notranslate"><span class="pre">projects</span></code></p></li>
+<li><p>define <code class="docutils literal notranslate"><span class="pre">project_code</span></code>, <code class="docutils literal notranslate"><span class="pre">das_code</span></code>, <code class="docutils literal notranslate"><span class="pre">origin_dir</span></code></p></li>
+<li><p><strong>define <code class="docutils literal notranslate"><span class="pre">code_pattern</span></code></strong> (linhas 950–952)</p></li>
+<li><p>define <code class="docutils literal notranslate"><span class="pre">station_type</span></code> por pertencimento em listas</p></li>
+</ol>
+<p>Caso contrário, cai no modo interativo:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">seleciona_projeto_estacao</span></code></p></li>
+</ul>
+</section>
+<section id="ano-forcado-linhas-968993">
+<h3>16.4 Ano forçado (linhas 968–993)<a class="headerlink" href="#ano-forcado-linhas-968993" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Se <code class="docutils literal notranslate"><span class="pre">ANO_FORCADO</span></code> foi definido, o script <strong>redefine</strong> (override) a função <code class="docutils literal notranslate"><span class="pre">obter_ultimo_sinc()</span></code> para usar exclusivamente:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/SDS/&lt;ANO_FORCADO&gt;/&lt;REDE&gt;/&lt;ESTACAO&gt;/HHZ.D</span></code></p></li>
+</ul>
+<p>Isso substitui a lógica “ano atual e anterior”.</p>
+</section>
+<section id="execucao-da-selecao-automatica-linhas-995996">
+<h3>16.5 Execução da seleção automática (linhas 995–996)<a class="headerlink" href="#execucao-da-selecao-automatica-linhas-995996" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Sequência fixa:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">obter_ultimo_sinc</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">encontrar_closest_zip</span></code></p></li>
+</ol>
+<p>Após isso, o script tem:</p>
+<ul class="simple">
+<li><p>qual pacote usar (<code class="docutils literal notranslate"><span class="pre">closest_zip</span></code>)</p></li>
+<li><p>qual intervalo de datas ele cobre (<code class="docutils literal notranslate"><span class="pre">closest_date</span></code> → <code class="docutils literal notranslate"><span class="pre">last_date</span></code>)</p></li>
+<li><p>qual o último sincronizado (<code class="docutils literal notranslate"><span class="pre">ultimo_sinc</span></code>)</p></li>
+</ul>
+</section>
+<section id="atalho-reftek-pacote-ja-contem-sds-linhas-9981022">
+<h3>16.6 Atalho REFTEK: pacote já contém <code class="docutils literal notranslate"><span class="pre">/sds/</span></code> (linhas 998–1022)<a class="headerlink" href="#atalho-reftek-pacote-ja-contem-sds-linhas-9981022" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Se <code class="docutils literal notranslate"><span class="pre">station_type=reftek</span></code> e o <code class="docutils literal notranslate"><span class="pre">closest_zip</span></code> contém paths com <code class="docutils literal notranslate"><span class="pre">/sds/</span></code>:</p>
+<ol class="arabic simple">
+<li><p>extrai os miniSEED em <code class="docutils literal notranslate"><span class="pre">target_dir/&lt;ESTACAO&gt;_&lt;YYYYMMDD&gt;_MSEED</span></code></p></li>
+<li><p>publica direto com <code class="docutils literal notranslate"><span class="pre">dataselect</span></code> + <code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code> + <code class="docutils literal notranslate"><span class="pre">workthisout.sh</span></code></p></li>
+<li><p>roda <code class="docutils literal notranslate"><span class="pre">finalizar_log</span></code> e encerra (<code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">0</span></code>)</p></li>
+</ol>
+<p><strong>Finalidade do atalho:</strong> pular a conversão binária quando o pacote já vem “pronto”.</p>
+</section>
+<section id="dispatch-final-e-encerramento-linhas-10241034">
+<h3>16.7 Dispatch final e encerramento (linhas 1024–1034)<a class="headerlink" href="#dispatch-final-e-encerramento-linhas-10241034" title="Link permanente para este cabeçalho">#</a></h3>
+<p>Se não caiu no atalho:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dispatch_processing()</span></code> chama:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">processar_reftek</span></code> ou <code class="docutils literal notranslate"><span class="pre">processar_raspberry</span></code></p></li>
+</ul>
+</li>
+<li><p>depois chama <code class="docutils literal notranslate"><span class="pre">finalizar_log</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">0</span></code></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="glossario-rapido-das-variaveis-que-amarram-o-fluxo">
+<h2>17) Glossário rápido das variáveis que “amarram” o fluxo<a class="headerlink" href="#glossario-rapido-das-variaveis-que-amarram-o-fluxo" title="Link permanente para este cabeçalho">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">project_code</span></code>: rede SDS (BC/BL/IT/MC/SP)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">das_code</span></code>: código(s) de origem (um ou mais)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">code_pattern</span></code>: <code class="docutils literal notranslate"><span class="pre">das_code</span></code> convertido para <code class="docutils literal notranslate"><span class="pre">A|B|C</span></code> (uso em extração REFTEK)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ultimo_sinc</span></code>: último <code class="docutils literal notranslate"><span class="pre">JJJ</span></code> encontrado em <code class="docutils literal notranslate"><span class="pre">/SDS/.../HHZ.D</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">closest_zip</span></code>: arquivo compactado escolhido (já “normalizado” se era <code class="docutils literal notranslate"><span class="pre">.zip.bz2</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">closest_zip_orig</span></code>: referência ao arquivo original (para MD5 e tamanho)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">closest_date</span></code>, <code class="docutils literal notranslate"><span class="pre">last_date</span></code>: <code class="docutils literal notranslate"><span class="pre">YYYYJJJ</span></code> do primeiro e último dia “novo” no pacote</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_dir</span></code>: diretório de trabalho por execução</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file</span></code>: log da execução (renomeado ao final)</p></li>
 </ul>
 </section>
 <hr class="docutils" />
-<section id="proximos-detalhes">
-<h2>7) Próximos detalhes<a class="headerlink" href="#proximos-detalhes" title="Link permanente para este cabeçalho">#</a></h2>
-<p>Os detalhes específicos de cada tipo de estação ficam nas páginas:</p>
+<section id="limites-e-garantias-do-fluxo-geral">
+<h2>18) Limites e garantias do fluxo geral<a class="headerlink" href="#limites-e-garantias-do-fluxo-geral" title="Link permanente para este cabeçalho">#</a></h2>
+<p>Garantias que o <code class="docutils literal notranslate"><span class="pre">main</span></code> tenta manter antes de iniciar o processamento específico:</p>
 <ul class="simple">
-<li><p>Fluxo REFTEK (RT130)</p></li>
-<li><p>Fluxo Raspberry Shake</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project_code</span></code>, <code class="docutils literal notranslate"><span class="pre">das_code</span></code>, <code class="docutils literal notranslate"><span class="pre">station_type</span></code> definidos e válidos</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">code_pattern</span></code> não vazio (necessário para REFTEK)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ultimo_sinc</span></code> obtido com regra clara (ano atual/anterior ou <code class="docutils literal notranslate"><span class="pre">-y</span></code>, ou <code class="docutils literal notranslate"><span class="pre">-f</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">closest_zip</span></code> escolhido por um critério determinístico (menor diff, desempate por maior alcance)</p></li>
 </ul>
+<p>Qualquer quebra de uma dessas garantias termina em <code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">1</span></code> com log detalhado.</p>
 </section>
 </section>
 
@@ -469,31 +907,99 @@ Em empate, prefere o arquivo com <strong>maior último dia</strong> disponível.
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Visão geral do fluxo</a><ul>
-<li><a class="reference internal" href="#estrutura-de-diretorios-e-entradas">1) Estrutura de diretórios e entradas</a></li>
-<li><a class="reference internal" href="#execucao-modo-interativo-e-modo-por-flags">2) Execução: modo interativo e modo por flags</a><ul>
-<li><a class="reference internal" href="#modo-interativo">Modo interativo</a></li>
-<li><a class="reference internal" href="#modo-por-flags">Modo por flags</a></li>
+<li><a class="reference internal" href="#">Visão geral do fluxo (<code class="docutils literal notranslate"><span class="pre">SYNC.sh</span></code>)</a><ul>
+<li><a class="reference internal" href="#objetivo-operacional-do-script">0) Objetivo operacional do script</a></li>
+<li><a class="reference internal" href="#regras-globais-de-robustez-e-rastreabilidade">1) Regras globais de robustez e rastreabilidade</a><ul>
+<li><a class="reference internal" href="#set-euo-pipefail-linha-14">1.1 <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">-euo</span> <span class="pre">pipefail</span></code> (linha 14)</a></li>
+<li><a class="reference internal" href="#run-cmd-linhas-2432">1.2 <code class="docutils literal notranslate"><span class="pre">run_cmd()</span></code> (linhas 24–32)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#determinar-o-ultimo-dia-sincronizado-na-sds">3) Determinar o “último dia sincronizado” na SDS</a></li>
-<li><a class="reference internal" href="#selecao-automatica-do-pacote-arquivo-compactado">4) Seleção automática do pacote (arquivo compactado)</a><ul>
-<li><a class="reference internal" href="#raspberry-shake-interno-do-zip">Raspberry Shake (interno do ZIP)</a></li>
-<li><a class="reference internal" href="#reftek-interno-do-zip-rar-tar">REFTEK (interno do ZIP/RAR/TAR)</a></li>
-<li><a class="reference internal" href="#criterio-de-escolha-do-closest">Critério de escolha do “closest”</a></li>
+<li><a class="reference internal" href="#inventario-estatico-estacoes-das-codes-e-projetos">2) Inventário estático: estações, DAS codes e projetos</a><ul>
+<li><a class="reference internal" href="#listas-por-tipo-linhas-3536">2.1 Listas por tipo (linhas 35–36)</a></li>
+<li><a class="reference internal" href="#das-codes-linhas-3847">2.2 <code class="docutils literal notranslate"><span class="pre">das_codes</span></code> (linhas 38–47)</a></li>
+<li><a class="reference internal" href="#projects-project-map-linhas-4966">2.3 <code class="docutils literal notranslate"><span class="pre">projects</span></code> + <code class="docutils literal notranslate"><span class="pre">project_map</span></code> (linhas 49–66)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#processamento-e-publicacao-no-sds">5) Processamento e publicação no SDS</a><ul>
-<li><a class="reference internal" href="#reftek-rt130">5.1) REFTEK (RT130)</a><ul>
-<li><a class="reference internal" href="#a-atalho-zip-ja-contem-sds">(A) Atalho: ZIP já contém <code class="docutils literal notranslate"><span class="pre">/sds/</span></code></a></li>
-<li><a class="reference internal" href="#b-fluxo-padrao-binario-miniseed-sds">(B) Fluxo padrão (binário → miniSEED → SDS)</a></li>
+<li><a class="reference internal" href="#variaveis-globais-para-compatibilidade-com-set-u">3) Variáveis globais (para compatibilidade com <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">-u</span></code>)</a><ul>
+<li><a class="reference internal" href="#globais-inicializadas-com-string-vazia-linhas-7188">3.1 Globais inicializadas com string vazia (linhas 71–88)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#raspberry-shake">5.2) Raspberry Shake</a></li>
+<li><a class="reference internal" href="#suporte-a-multiplos-das-code">4) Suporte a múltiplos DAS_CODE</a><ul>
+<li><a class="reference internal" href="#build-code-pattern-linhas-93104">4.1 <code class="docutils literal notranslate"><span class="pre">build_code_pattern()</span></code> (linhas 93–104)</a></li>
+<li><a class="reference internal" href="#split-das-codes-linhas-107110">4.2 <code class="docutils literal notranslate"><span class="pre">split_das_codes()</span></code> (linhas 107–110)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#logs-e-rastreabilidade">6) Logs e rastreabilidade</a></li>
-<li><a class="reference internal" href="#proximos-detalhes">7) Próximos detalhes</a></li>
+<li><a class="reference internal" href="#funcoes-utilitarias-gerais">5) Funções utilitárias gerais</a><ul>
+<li><a class="reference internal" href="#log-debug-linha-115">5.1 <code class="docutils literal notranslate"><span class="pre">log_debug()</span></code> (linha 115)</a></li>
+<li><a class="reference internal" href="#dia-juliano-linha-117">5.2 <code class="docutils literal notranslate"><span class="pre">dia_juliano()</span></code> (linha 117)</a></li>
+<li><a class="reference internal" href="#is-station-in-list-linhas-119128">5.3 <code class="docutils literal notranslate"><span class="pre">is_station_in_list()</span></code> (linhas 119–128)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#selecao-projeto-estacao-modo-interativo">6) Seleção Projeto/Estação (modo interativo)</a><ul>
+<li><a class="reference internal" href="#seleciona-projeto-estacao-linhas-131167">6.1 <code class="docutils literal notranslate"><span class="pre">seleciona_projeto_estacao()</span></code> (linhas 131–167)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#determinar-o-ultimo-sincronizado-na-sds">7) Determinar o último sincronizado na SDS</a><ul>
+<li><a class="reference internal" href="#obter-ultimo-sinc-linhas-169212">7.1 <code class="docutils literal notranslate"><span class="pre">obter_ultimo_sinc()</span></code> (linhas 169–212)</a><ul>
+<li><a class="reference internal" href="#caso-a-sincronizacao-forcada-force-sync-1-linhas-170179">Caso A — sincronização forçada (<code class="docutils literal notranslate"><span class="pre">FORCE_SYNC=1</span></code>) (linhas 170–179)</a></li>
+<li><a class="reference internal" href="#caso-b-regra-padrao-linhas-181211">Caso B — regra padrão (linhas 181–211)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#suporte-a-arquivos-compactados-e-listagem-de-paths-internos">8) Suporte a arquivos compactados e listagem de paths internos</a><ul>
+<li><a class="reference internal" href="#prepare-archive-linhas-214247">8.1 <code class="docutils literal notranslate"><span class="pre">prepare_archive()</span></code> (linhas 214–247)</a></li>
+<li><a class="reference internal" href="#list-archive-paths-linhas-249258">8.2 <code class="docutils literal notranslate"><span class="pre">list_archive_paths()</span></code> (linhas 249–258)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#extracao-de-datas-internas-do-pacote">9) Extração de “datas internas” do pacote</a><ul>
+<li><a class="reference internal" href="#raspberry-extract-dates-from-rasp-linhas-260273">9.1 Raspberry: <code class="docutils literal notranslate"><span class="pre">extract_dates_from_rasp()</span></code> (linhas 260–273)</a></li>
+<li><a class="reference internal" href="#reftek-qualquer-profundidade-extract-reftek-dates-any-depth-linhas-275305">9.2 REFTEK (qualquer profundidade): <code class="docutils literal notranslate"><span class="pre">extract_reftek_dates_any_depth()</span></code> (linhas 275–305)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#selecao-automatica-do-pacote-closest">10) Seleção automática do pacote “closest”</a><ul>
+<li><a class="reference internal" href="#encontrar-closest-zip-linhas-308408">10.1 <code class="docutils literal notranslate"><span class="pre">encontrar_closest_zip()</span></code> (linhas 308–408)</a><ul>
+<li><a class="reference internal" href="#inicializacao-linhas-309323">10.1.1 Inicialização (linhas 309–323)</a></li>
+<li><a class="reference internal" href="#loop-por-arquivo-linhas-325396">10.1.2 Loop por arquivo (linhas 325–396)</a></li>
+<li><a class="reference internal" href="#resultado-consolidado-linhas-398407">10.1.3 Resultado consolidado (linhas 398–407)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#validacao-e-tolerancias-do-parfile-bloco-transversal-do-reftek">11) Validação e tolerâncias do <code class="docutils literal notranslate"><span class="pre">parfile</span></code> (bloco transversal do REFTEK)</a><ul>
+<li><a class="reference internal" href="#comparar-parfiles-com-tolerancia-linhas-413534">11.1 <code class="docutils literal notranslate"><span class="pre">comparar_parfiles_com_tolerancia()</span></code> (linhas 413–534)</a></li>
+<li><a class="reference internal" href="#resumir-auto-substituicoes-parfile-linhas-537579">11.2 <code class="docutils literal notranslate"><span class="pre">resumir_auto_substituicoes_parfile()</span></code> (linhas 537–579)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fluxo-especifico-reftek-funcoes-auxiliares-de-inspecao-interna">12) Fluxo específico: REFTEK (funções auxiliares de inspeção interna)</a><ul>
+<li><a class="reference internal" href="#find-reftek-dirs-stream1-linhas-581594">12.1 <code class="docutils literal notranslate"><span class="pre">find_reftek_dirs_stream1()</span></code> (linhas 581–594)</a></li>
+<li><a class="reference internal" href="#find-reftek-files-stream0-linhas-596609">12.2 <code class="docutils literal notranslate"><span class="pre">find_reftek_files_stream0()</span></code> (linhas 596–609)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fluxo-reftek-visao-de-blocos">13) Fluxo REFTEK (visão de blocos)</a><ul>
+<li><a class="reference internal" href="#processar-reftek-linhas-611778">13.1 <code class="docutils literal notranslate"><span class="pre">processar_reftek()</span></code> (linhas 611–778)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fluxo-raspberry-shake-visao-de-blocos">14) Fluxo Raspberry Shake (visão de blocos)</a><ul>
+<li><a class="reference internal" href="#processar-raspberry-linhas-781836">14.1 <code class="docutils literal notranslate"><span class="pre">processar_raspberry()</span></code> (linhas 781–836)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#finalizacao-e-rastreabilidade-do-log">15) Finalização e rastreabilidade do log</a><ul>
+<li><a class="reference internal" href="#finalizar-log-linhas-839886">15.1 <code class="docutils literal notranslate"><span class="pre">finalizar_log()</span></code> (linhas 839–886)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bloco-config-main-controle-do-fluxo">16) Bloco CONFIG + MAIN (controle do fluxo)</a><ul>
+<li><a class="reference internal" href="#configuracao-de-diretorios-e-log-linhas-891899">16.1 Configuração de diretórios e log (linhas 891–899)</a></li>
+<li><a class="reference internal" href="#cli-e-modos-de-execucao-linhas-901930">16.2 CLI e modos de execução (linhas 901–930)</a></li>
+<li><a class="reference internal" href="#selecao-do-contexto-linhas-932967">16.3 Seleção do contexto (linhas 932–967)</a></li>
+<li><a class="reference internal" href="#ano-forcado-linhas-968993">16.4 Ano forçado (linhas 968–993)</a></li>
+<li><a class="reference internal" href="#execucao-da-selecao-automatica-linhas-995996">16.5 Execução da seleção automática (linhas 995–996)</a></li>
+<li><a class="reference internal" href="#atalho-reftek-pacote-ja-contem-sds-linhas-9981022">16.6 Atalho REFTEK: pacote já contém <code class="docutils literal notranslate"><span class="pre">/sds/</span></code> (linhas 998–1022)</a></li>
+<li><a class="reference internal" href="#dispatch-final-e-encerramento-linhas-10241034">16.7 Dispatch final e encerramento (linhas 1024–1034)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#glossario-rapido-das-variaveis-que-amarram-o-fluxo">17) Glossário rápido das variáveis que “amarram” o fluxo</a></li>
+<li><a class="reference internal" href="#limites-e-garantias-do-fluxo-geral">18) Limites e garantias do fluxo geral</a></li>
 </ul>
 </li>
 </ul>
