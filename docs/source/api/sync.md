@@ -2,7 +2,7 @@
 
 Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links bidirecionais para o código-fonte renderizado.
 
-(sync-strict-mode)=
+(api-sync-strict-mode)=
 ## Modo estrito (`set -euo pipefail`) ([source]{ref}`src-sync-strict-mode`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-STRICT-MODE"
@@ -12,7 +12,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-strict-mode
 ```
 
-(sync-run-cmd)=
+(api-sync-run-cmd)=
 ## run_cmd ([source]{ref}`src-sync-run-cmd`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-run_cmd"
@@ -22,7 +22,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-run-cmd
 ```
 
-(sync-station-lists)=
+(api-sync-station-lists)=
 ## Listas de estações ([source]{ref}`src-sync-station-lists`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-DATA-STATION-LISTS"
@@ -32,7 +32,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-station-lists
 ```
 
-(sync-das-codes)=
+(api-sync-das-codes)=
 ## das_codes ([source]{ref}`src-sync-das-codes`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-DATA-DAS-CODES"
@@ -42,7 +42,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-das-codes
 ```
 
-(sync-projects)=
+(api-sync-projects)=
 ## projects ([source]{ref}`src-sync-projects`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-DATA-PROJECTS"
@@ -52,7 +52,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-projects
 ```
 
-(sync-project-map)=
+(api-sync-project-map)=
 ## project_map ([source]{ref}`src-sync-project-map`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-DATA-PROJECT-MAP"
@@ -62,7 +62,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-project-map
 ```
 
-(sync-globals)=
+(api-sync-globals)=
 ## Globais inicializadas ([source]{ref}`src-sync-globals`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-INVAR-GLOBALS"
@@ -72,7 +72,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-globals
 ```
 
-(sync-build-code-pattern)=
+(api-sync-build-code-pattern)=
 ## build_code_pattern ([source]{ref}`src-sync-build-code-pattern`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-build_code_pattern"
@@ -82,7 +82,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-build-code-pattern
 ```
 
-(sync-split-das-codes)=
+(api-sync-split-das-codes)=
 ## split_das_codes ([source]{ref}`src-sync-split-das-codes`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-split_das_codes"
@@ -92,7 +92,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-split-das-codes
 ```
 
-(sync-log-debug)=
+(api-sync-log-debug)=
 ## log_debug ([source]{ref}`src-sync-log-debug`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-log_debug"
@@ -102,7 +102,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-log-debug
 ```
 
-(sync-dia-juliano)=
+(api-sync-dia-juliano)=
 ## dia_juliano ([source]{ref}`src-sync-dia-juliano`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-dia_juliano"
@@ -112,7 +112,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-dia-juliano
 ```
 
-(sync-is-station-in-list)=
+(api-sync-is-station-in-list)=
 ## is_station_in_list ([source]{ref}`src-sync-is-station-in-list`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-is_station_in_list"
@@ -122,7 +122,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-is-station-in-list
 ```
 
-(sync-seleciona-projeto)=
+(api-sync-seleciona-projeto)=
 ## seleciona_projeto_estacao ([source]{ref}`src-sync-seleciona-projeto`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-seleciona_projeto_estacao"
@@ -132,7 +132,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-seleciona-projeto
 ```
 
-(sync-obter-ultimo-sinc)=
+(api-sync-obter-ultimo-sinc)=
 ## obter_ultimo_sinc ([source]{ref}`src-sync-obter-ultimo-sinc`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-obter_ultimo_sinc"
@@ -142,7 +142,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-obter-ultimo-sinc
 ```
 
-(sync-prepare-archive)=
+(api-sync-prepare-archive)=
 ## prepare_archive ([source]{ref}`src-sync-prepare-archive`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-prepare_archive"
@@ -152,7 +152,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-prepare-archive
 ```
 
-(sync-list-archive-paths)=
+(api-sync-list-archive-paths)=
 ## list_archive_paths ([source]{ref}`src-sync-list-archive-paths`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-list_archive_paths"
@@ -162,7 +162,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-list-archive-paths
 ```
 
-(sync-extract-dates-rasp)=
+(api-sync-extract-dates-rasp)=
 ## extract_dates_from_rasp ([source]{ref}`src-sync-extract-dates-rasp`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-extract_dates_from_rasp"
@@ -172,7 +172,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-extract-dates-rasp
 ```
 
-(sync-extract-reftek-dates)=
+(api-sync-extract-reftek-dates)=
 ## extract_reftek_dates_any_depth ([source]{ref}`src-sync-extract-reftek-dates`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-extract_reftek_dates_any_depth"
@@ -182,7 +182,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-extract-reftek-dates
 ```
 
-(sync-encontrar-closest-zip)=
+(api-sync-encontrar-closest-zip)=
 ## encontrar_closest_zip ([source]{ref}`src-sync-encontrar-closest-zip`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-encontrar_closest_zip"
@@ -192,7 +192,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-encontrar-closest-zip
 ```
 
-(sync-comparar-parfiles)=
+(api-sync-comparar-parfiles)=
 ## comparar_parfiles_com_tolerancia ([source]{ref}`src-sync-comparar-parfiles`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-comparar_parfiles_com_tolerancia"
@@ -202,7 +202,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-comparar-parfiles
 ```
 
-(sync-resumir-parfiles)=
+(api-sync-resumir-parfiles)=
 ## resumir_auto_substituicoes_parfile ([source]{ref}`src-sync-resumir-parfiles`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-resumir_auto_substituicoes_parfile"
@@ -212,7 +212,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-resumir-parfiles
 ```
 
-(sync-find-reftek-dirs-stream1)=
+(api-sync-find-reftek-dirs-stream1)=
 ## find_reftek_dirs_stream1 ([source]{ref}`src-sync-find-reftek-dirs-stream1`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-find_reftek_dirs_stream1"
@@ -222,7 +222,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-find-reftek-dirs-stream1
 ```
 
-(sync-find-reftek-files-stream0)=
+(api-sync-find-reftek-files-stream0)=
 ## find_reftek_files_stream0 ([source]{ref}`src-sync-find-reftek-files-stream0`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-find_reftek_files_stream0"
@@ -232,7 +232,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-find-reftek-files-stream0
 ```
 
-(sync-processar-reftek)=
+(api-sync-processar-reftek)=
 ## processar_reftek ([source]{ref}`src-sync-processar-reftek`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-processar_reftek"
@@ -242,7 +242,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-processar-reftek
 ```
 
-(sync-processar-raspberry)=
+(api-sync-processar-raspberry)=
 ## processar_raspberry ([source]{ref}`src-sync-processar-raspberry`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-processar_raspberry"
@@ -252,7 +252,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-processar-raspberry
 ```
 
-(sync-finalizar-log)=
+(api-sync-finalizar-log)=
 ## finalizar_log ([source]{ref}`src-sync-finalizar-log`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-FUNC-finalizar_log"
@@ -262,7 +262,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-finalizar-log
 ```
 
-(sync-config-logging)=
+(api-sync-config-logging)=
 ## Configuração de log ([source]{ref}`src-sync-config-logging`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-CONFIG-LOGGING"
@@ -272,7 +272,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-config-logging
 ```
 
-(sync-cli-usage)=
+(api-sync-cli-usage)=
 ## CLI usage ([source]{ref}`src-sync-cli-usage`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-CLI-USAGE"
@@ -282,7 +282,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-cli-usage
 ```
 
-(sync-cli-getopts)=
+(api-sync-cli-getopts)=
 ## CLI getopts ([source]{ref}`src-sync-cli-getopts`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-CLI-GETOPTS"
@@ -292,7 +292,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-cli-getopts
 ```
 
-(sync-select-context)=
+(api-sync-select-context)=
 ## Seleção do contexto ([source]{ref}`src-sync-select-context`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-SELECT-CONTEXT"
@@ -302,7 +302,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-select-context
 ```
 
-(sync-ano-forcado)=
+(api-sync-ano-forcado)=
 ## Ano forçado ([source]{ref}`src-sync-ano-forcado`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-ANO-FORCADO"
@@ -312,7 +312,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-ano-forcado
 ```
 
-(sync-auto-selection)=
+(api-sync-auto-selection)=
 ## Seleção automática ([source]{ref}`src-sync-auto-selection`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-AUTO-SELECTION"
@@ -322,7 +322,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-auto-selection
 ```
 
-(sync-reftek-shortcut)=
+(api-sync-reftek-shortcut)=
 ## Atalho REFTEK /sds ([source]{ref}`src-sync-reftek-shortcut`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-REFTEK-SDS-SHORTCUT"
@@ -332,7 +332,7 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :name: api-sync-reftek-shortcut
 ```
 
-(sync-dispatch)=
+(api-sync-dispatch)=
 ## Dispatch final ([source]{ref}`src-sync-dispatch`)
 ```{literalinclude} ../../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-MAIN-DISPATCH"
