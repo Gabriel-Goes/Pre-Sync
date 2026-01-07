@@ -10,7 +10,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-MAIN-STRICT-MODE"
 :language: bash
 :caption: Modo estrito do shell
-:id: api-sync-strict-mode
 ```
 
 (api-sync-run-cmd)=
@@ -21,7 +20,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-run_cmd"
 :language: bash
 :caption: Função run_cmd
-:id: api-sync-run-cmd
 ```
 
 (api-sync-station-lists)=
@@ -32,7 +30,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-DATA-STATION-LISTS"
 :language: bash
 :caption: Listas de estações
-:id: api-sync-station-lists
 ```
 
 (api-sync-das-codes)=
@@ -43,7 +40,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-DATA-DAS-CODES"
 :language: bash
 :caption: Mapa de DAS codes
-:id: api-sync-das-codes
 ```
 
 (api-sync-projects)=
@@ -54,7 +50,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-DATA-PROJECTS"
 :language: bash
 :caption: Lista de projetos
-:id: api-sync-projects
 ```
 
 (api-sync-project-map)=
@@ -65,7 +60,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-DATA-PROJECT-MAP"
 :language: bash
 :caption: Mapa de projetos
-:id: api-sync-project-map
 ```
 
 (api-sync-globals)=
@@ -76,7 +70,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-INVAR-GLOBALS"
 :language: bash
 :caption: Globais inicializadas
-:id: api-sync-globals
 ```
 
 (api-sync-build-code-pattern)=
@@ -87,7 +80,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-build_code_pattern"
 :language: bash
 :caption: build_code_pattern
-:id: api-sync-build-code-pattern
 ```
 
 (api-sync-split-das-codes)=
@@ -98,7 +90,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-split_das_codes"
 :language: bash
 :caption: split_das_codes
-:id: api-sync-split-das-codes
 ```
 
 (api-sync-log-debug)=
@@ -109,7 +100,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-log_debug"
 :language: bash
 :caption: log_debug
-:id: api-sync-log-debug
 ```
 
 (api-sync-dia-juliano)=
@@ -120,7 +110,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-dia_juliano"
 :language: bash
 :caption: dia_juliano
-:id: api-sync-dia-juliano
 ```
 
 (api-sync-is-station-in-list)=
@@ -131,7 +120,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-is_station_in_list"
 :language: bash
 :caption: is_station_in_list
-:id: api-sync-is-station-in-list
 ```
 
 (api-sync-seleciona-projeto)=
@@ -142,7 +130,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-seleciona_projeto_estacao"
 :language: bash
 :caption: seleciona_projeto_estacao
-:id: api-sync-seleciona-projeto
 ```
 
 (api-sync-obter-ultimo-sinc)=
@@ -153,7 +140,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-obter_ultimo_sinc"
 :language: bash
 :caption: obter_ultimo_sinc
-:id: api-sync-obter-ultimo-sinc
 ```
 
 (api-sync-prepare-archive)=
@@ -164,7 +150,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-prepare_archive"
 :language: bash
 :caption: prepare_archive
-:id: api-sync-prepare-archive
 ```
 
 (api-sync-list-archive-paths)=
@@ -175,7 +160,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-list_archive_paths"
 :language: bash
 :caption: list_archive_paths
-:id: api-sync-list-archive-paths
 ```
 
 (api-sync-extract-dates-rasp)=
@@ -186,7 +170,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-extract_dates_from_rasp"
 :language: bash
 :caption: extract_dates_from_rasp
-:id: api-sync-extract-dates-rasp
 ```
 
 (api-sync-extract-reftek-dates)=
@@ -197,7 +180,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-extract_reftek_dates_any_depth"
 :language: bash
 :caption: extract_reftek_dates_any_depth
-:id: api-sync-extract-reftek-dates
 ```
 
 (api-sync-encontrar-closest-zip)=
@@ -208,7 +190,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-encontrar_closest_zip"
 :language: bash
 :caption: encontrar_closest_zip
-:id: api-sync-encontrar-closest-zip
 ```
 
 (api-sync-comparar-parfiles)=
@@ -219,7 +200,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-comparar_parfiles_com_tolerancia"
 :language: bash
 :caption: comparar_parfiles_com_tolerancia
-:id: api-sync-comparar-parfiles
 ```
 
 (api-sync-resumir-parfiles)=
@@ -230,7 +210,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-resumir_auto_substituicoes_parfile"
 :language: bash
 :caption: resumir_auto_substituicoes_parfile
-:id: api-sync-resumir-parfiles
 ```
 
 (api-sync-find-reftek-dirs-stream1)=
@@ -241,7 +220,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-find_reftek_dirs_stream1"
 :language: bash
 :caption: find_reftek_dirs_stream1
-:id: api-sync-find-reftek-dirs-stream1
 ```
 
 (api-sync-find-reftek-files-stream0)=
@@ -252,7 +230,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-find_reftek_files_stream0"
 :language: bash
 :caption: find_reftek_files_stream0
-:id: api-sync-find-reftek-files-stream0
 ```
 
 (api-sync-processar-reftek)=
@@ -263,7 +240,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-processar_reftek"
 :language: bash
 :caption: processar_reftek
-:id: api-sync-processar-reftek
 ```
 
 (api-sync-processar-raspberry)=
@@ -274,7 +250,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-processar_raspberry"
 :language: bash
 :caption: processar_raspberry
-:id: api-sync-processar-raspberry
 ```
 
 (api-sync-finalizar-log)=
@@ -285,7 +260,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-FUNC-finalizar_log"
 :language: bash
 :caption: finalizar_log
-:id: api-sync-finalizar-log
 ```
 
 (api-sync-config-logging)=
@@ -296,7 +270,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-MAIN-CONFIG-LOGGING"
 :language: bash
 :caption: Configuração de diretórios e log
-:id: api-sync-config-logging
 ```
 
 (api-sync-cli-usage)=
@@ -307,7 +280,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-MAIN-CLI-USAGE"
 :language: bash
 :caption: CLI usage
-:id: api-sync-cli-usage
 ```
 
 (api-sync-cli-getopts)=
@@ -318,7 +290,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-MAIN-CLI-GETOPTS"
 :language: bash
 :caption: CLI getopts
-:id: api-sync-cli-getopts
 ```
 
 (api-sync-select-context)=
@@ -329,7 +300,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-MAIN-SELECT-CONTEXT"
 :language: bash
 :caption: Seleção do contexto
-:id: api-sync-select-context
 ```
 
 (api-sync-ano-forcado)=
@@ -340,7 +310,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-MAIN-ANO-FORCADO"
 :language: bash
 :caption: Ano forçado
-:id: api-sync-ano-forcado
 ```
 
 (api-sync-auto-selection)=
@@ -351,7 +320,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-MAIN-AUTO-SELECTION"
 :language: bash
 :caption: Seleção automática
-:id: api-sync-auto-selection
 ```
 
 (api-sync-reftek-shortcut)=
@@ -362,7 +330,6 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-MAIN-REFTEK-SDS-SHORTCUT"
 :language: bash
 :caption: Atalho REFTEK com SDS
-:id: api-sync-reftek-shortcut
 ```
 
 (api-sync-dispatch)=
@@ -373,5 +340,4 @@ Esta seção descreve os principais blocos e funções do `SYNC.sh`, com links b
 :end-before: "DOC-END: SYNC-MAIN-DISPATCH"
 :language: bash
 :caption: Dispatch final
-:id: api-sync-dispatch
 ```
