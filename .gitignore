@@ -1,0 +1,39 @@
+# GITIGNORE
+
+# This file is used to specify files and directories that should be ignored by Git.
+*/zip/*
+# Ignore all zip files in any directory
+*.zip
+*.rar
+*.tar
+*.bkp/
+
+# Ignore all files within sds directory
+*/sds/*
+*/pdf/*
+
+# Ignore all files with _MSEED in any directory
+*/*MSEED
+*/*_BINARIES
+
+# Ignore venv files
+*/.venv-docs/*
+.venv-docs/
+.venv*
+
+BC4_*
+BC9_*
+FIGS
+LOGS/
+
+python/dataselect/
+python/rt2ms_py3/
+python/sohstationviewer/
+__pycache__/
+.pyc
+
+docs/build/
+logs/
+LOGS/
+*.log
+*.logpeek.log
