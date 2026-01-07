@@ -9,6 +9,8 @@ O **SYNC** padroniza a sincronização de dados de estações **REFTEK RT130** e
 guia_rapido
 guia_operador
 visao_geral_do_fluxo
+api/sync
+_modules/SYNC.sh
 fluxo_reftek
 fluxo_raspberry
 estrutura_diretorios

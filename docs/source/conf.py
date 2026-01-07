@@ -14,10 +14,14 @@ release = '0.1.0'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
+import os
+
 extensions = [
     "myst_parser",
     "sphinx_copybutton",
     "sphinx_design",
+    "sphinx.ext.autosectionlabel",
+    "sphinx.ext.extlinks",
 ]
 
 templates_path = ['_templates']
@@ -43,3 +47,11 @@ myst_enable_extensions = [
     "deflist",
     "tasklist",
 ]
+
+myst_heading_anchors = 2
+autosectionlabel_prefix_document = True
+
+git_ref = os.environ.get("GITHUB_SHA", "main")
+extlinks = {
+    "gh": (f"https://github.com/Gabriel-Goes/Pre-Sync/blob/{git_ref}/%s", "%s"),
+}
