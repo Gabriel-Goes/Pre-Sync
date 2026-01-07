@@ -93,7 +93,7 @@ Mapeia `ESTACAO → DAS_CODE` (ou serial/código de origem).
   - `build_code_pattern` (regex `A|B|C`)
   - `split_das_codes` (array de códigos)
 
-(sync-projects-map)=
+(sync-projects)=
 ### 2.3 `projects` + `project_map`
 ```{literalinclude} ../../SYNC.sh
 :start-after: "DOC-SECTION: SYNC-DATA-PROJECTS"
