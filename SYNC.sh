@@ -17,6 +17,7 @@ set -euo pipefail
 
 # Você pode executar forçadamente o processo com -f (FORCE_SYNC=1)
 FORCE_SYNC=0
+DEBUG_TRACE=0
 
 ################################################################################
 #                            FUNÇÃO AUXILIAR                                    #
@@ -950,6 +951,7 @@ log_file="$log_dir/test.log"
 : > "$log_file"
 exec > >(tee -a "$log_file") 2>&1
 echo "→ Sincronização iniciada em: $(date '+%Y-%m-%d %H:%M:%S')" >> "$log_file"
+
 # DOC-END: SYNC-MAIN-CONFIG-LOGGING
 
 # DOC-SECTION: SYNC-MAIN-CLI-USAGE
@@ -961,7 +963,8 @@ Uso: $0 [opções]
   -e ESTAÇÃO   Código da estação (por ex: "BC4")
   -y ANO       (opcional) Ano para procurar o último sincronizado (YYYY).
                Se omitido, tenta ano atual e ano anterior.
-  -f           Força sincronização (ignora último dia na SDS)
+  -f           Força sincronização (ignora último dia na SDS).
+  -d           Debug: mostra TODOS os comandos executados (set -x) com timestamp
   -h           Exibe esta ajuda
 
 Exemplos:
@@ -974,17 +977,24 @@ EOF
 # DOC-END: SYNC-MAIN-CLI-USAGE
 
 # DOC-SECTION: SYNC-MAIN-CLI-GETOPTS
-while getopts ":p:e:y:hf" opt; do
+while getopts ":p:e:y:hfd" opt; do
   case "$opt" in
     p) PROJETO_ESCOLHIDO="$OPTARG" ;;
     e) ESTACAO_ESCOLHIDA="$OPTARG" ;;
     y) ANO_FORCADO="$OPTARG" ;;
     f) FORCE_SYNC=1 ;;
+    d) DEBUG_TRACE=1 ;;
     h) usage ;;
     *) usage ;;
   esac
 done
 shift $((OPTIND -1))
+
+# Debug trace (mostra todos os comandos com timestamp)
+if [[ "${DEBUG_TRACE:-0}" -eq 1 ]]; then
+  export PS4='[$(date "+%Y-%m-%d %H:%M:%S")] ${BASH_SOURCE##*/}:${LINENO}:${FUNCNAME[0]:-MAIN}: '
+  set -x
+fi
 # DOC-END: SYNC-MAIN-CLI-GETOPTS
 
 # DOC-SECTION: SYNC-MAIN-SELECT-CONTEXT
