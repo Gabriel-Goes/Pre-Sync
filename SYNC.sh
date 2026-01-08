@@ -385,46 +385,32 @@ extract_reftek_dates_any_depth() {
     local file="$2"
     local codes_pat="$3"   # ex: "9690|AD20"
 
+    # Extrai diretórios que terminem em: .../<YYYYJJJ...>/<DAS>/<STREAM>[/]
+    # (independente da profundidade), evitando varrer o path em loops O(m) por linha.
     list_archive_paths "$kind" "$file" | \
     awk -v codes="$codes_pat" '
-        BEGIN { n = split(codes, C, "|") }
+        BEGIN{
+            n = split(codes, C, "|")
+            codes_re = C[1]
+            for (i=2; i<=n; i++) codes_re = codes_re "|" C[i]
 
-        function iscode(x){
-            for (i=1; i<=n; i++) if (x == C[i]) return 1
-            return 0
+            # casa DIRETÓRIO: .../<YYYYJJJ...>/<CODE>/<STREAM>   (opcional "/" no fim)
+            re = "(^|/)([0-9]{7})[^/]*\\/(" codes_re ")\\/([0-9]+)\\/?$"
         }
-
         {
-            # remove prefixo "./" ou ".\"
-            sub(/^\.[\/\\]/, "", $0)
+            sub(/^\.[\/\\]/, "", $0)   # remove prefixo "./" ou ".\"
+            gsub(/\\/, "/", $0)        # normaliza separador Windows -> Unix
 
-            # normaliza separador Windows -> Unix
-            gsub(/\\/, "/", $0)
-
-            m = split($0, P, "/")
-
-            for (i=1; i<=m-2; i++) {
-                # aceita YYYYJJJ e também YYYYJJJ_sufixo
-                if (P[i] ~ /^[0-9]{7}/ && iscode(P[i+1]) && P[i+2] ~ /^[0-9]+$/) {
-                    d = P[i]
-                    sub(/[^0-9].*$/, "", d)   # fica só YYYYJJJ
-                    if (d ~ /^[0-9]{7}$/) {
-                        stream = P[i+2]
-                        key = d SUBSEP stream
-                        if (!(key in seen)) {
-                            seen[key] = 1
-                            streams[d] = (d in streams) ? streams[d] "," stream : stream
-                        }
-                        days[d] = 1
-                    }
-                    break
+            if (match($0, re, M)) {
+                d = M[2]; s = M[4]
+                if (!seen[d SUBSEP s]++) {
+                    streams[d] = (d in streams) ? streams[d] "," s : s
+                    days[d] = 1
                 }
             }
         }
         END {
-            for (d in days) {
-                print d ":" streams[d]
-            }
+            for (d in days) print d ":" streams[d]
         }
     ' | LC_ALL=C sort -t: -k1,1
 }
