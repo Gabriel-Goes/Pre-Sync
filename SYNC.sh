@@ -98,6 +98,7 @@ closest_zip=""
 closest_zip_orig=""
 closest_date=""
 last_date=""
+closest_streams_info=()
 ultimo_sinc=""
 ano_sinc=""
 # DOC-END: SYNC-INVAR-GLOBALS
@@ -404,15 +405,28 @@ extract_reftek_dates_any_depth() {
 
             for (i=1; i<=m-2; i++) {
                 # aceita YYYYJJJ e também YYYYJJJ_sufixo
-                if (P[i] ~ /^[0-9]{7}/ && iscode(P[i+1]) && (P[i+2] == "0" || P[i+2] == "1")) {
+                if (P[i] ~ /^[0-9]{7}/ && iscode(P[i+1]) && P[i+2] ~ /^[0-9]+$/) {
                     d = P[i]
                     sub(/[^0-9].*$/, "", d)   # fica só YYYYJJJ
-                    if (d ~ /^[0-9]{7}$/) print d
+                    if (d ~ /^[0-9]{7}$/) {
+                        stream = P[i+2]
+                        key = d SUBSEP stream
+                        if (!(key in seen)) {
+                            seen[key] = 1
+                            streams[d] = (d in streams) ? streams[d] "," stream : stream
+                        }
+                        days[d] = 1
+                    }
                     break
                 }
             }
         }
-    ' | LC_ALL=C sort -u
+        END {
+            for (d in days) {
+                print d ":" streams[d]
+            }
+        }
+    ' | LC_ALL=C sort -t: -k1,1
 }
 # DOC-END: SYNC-FUNC-extract_reftek_dates_any_depth
 
@@ -428,6 +442,7 @@ function encontrar_closest_zip() {
     closest_zip_orig=""
     closest_date=""
     last_date=""
+    closest_streams_info=()
 
     [[ -n "${das_code:-}" ]] || { echo "[ERRO] das_code vazio"; exit 1; }
     [[ -n "${code_pattern:-}" ]] || code_pattern="$(build_code_pattern "$das_code")"
@@ -460,24 +475,38 @@ function encontrar_closest_zip() {
         fi
 
         if (( ${#raw_datas[@]} )); then
-            echo "   - Pastas internas encontradas (bruto):"
+            echo "   - Pastas internas encontradas (dia:streams):"
             echo "${raw_datas[*]}"
         else
             echo "   - Sem pastas internas (YYYYJJJ/DAS/[0-n]) em $arquivo."
             continue
         fi
 
-        local todas_datas=()
+        local -a todas_datas=()
+        local -a day_streams_lines=()
+        local -A day_streams=()
+        local entry
+        for entry in "${raw_datas[@]}"; do
+            local day="${entry%%:*}"
+            local streams="${entry#*:}"
+            [[ "$entry" == *:* ]] || streams=""
+            day_streams["$day"]="$streams"
+            todas_datas+=("$day")
+        done
+
         mapfile -t todas_datas < <(
-            printf "%s\n" "${raw_datas[@]}" \
-            | sed -E 's/^([0-9]{7}).*$/\1/' \
-            | sort -u
+            printf "%s\n" "${todas_datas[@]}" | sort -u
         )
-        echo "   - Datas internas puras:"
-        echo "${todas_datas[*]}"
+
+        local dia
+        for dia in "${todas_datas[@]}"; do
+            day_streams_lines+=("$dia:${day_streams[$dia]}")
+        done
+
+        echo "   - Datas internas e streams:"
+        printf "     • %s\n" "${day_streams_lines[@]}"
 
         local valid_new_dates=()
-        local dia
         for dia in "${todas_datas[@]}"; do
             local julian=${dia:4:3}
             (( 10#$julian >= 10#$ultimo_sinc )) && valid_new_dates+=("$dia")
@@ -500,6 +529,7 @@ function encontrar_closest_zip() {
             closest_zip_orig="$ARCH_ORIG"
             closest_date="$first_new"
             last_date="$last_new"
+            closest_streams_info=("${day_streams_lines[@]}")
         fi
     done
 
@@ -519,6 +549,10 @@ function encontrar_closest_zip() {
     echo "     • Arquivo:      $closest_zip"
     echo "     • Primeiro dia: $closest_date - $closest_gregorian"
     echo "     • Último dia:   $last_date - $last_gregorian"
+    if (( ${#closest_streams_info[@]} )); then
+        echo "     • Streams por dia:"
+        printf "       - %s\n" "${closest_streams_info[@]}"
+    fi
     echo "###############################################"
 }
 # DOC-END: SYNC-FUNC-encontrar_closest_zip
