@@ -282,33 +282,82 @@ prepare_archive() {
 list_archive_paths() {
     local kind="$1"
     local file="$2"
+    local list_timeout="${LIST_TIMEOUT:-60s}"
+    local err_file=""
+    local stderr_target="/dev/null"
+    local list_err_log="${log_dir:-.}/archive_list_errors.log"
+
+    report_list_error() {
+        local tool="$1"
+        local status="$2"
+        echo "   - [WARN] Falha ao listar conteúdo ($tool) em '$file' (exit=$status). Pulando." >&2
+        if [[ -n "$err_file" && -s "$err_file" ]]; then
+            local summary
+            summary="$(tail -n 5 "$err_file")"
+            echo "   - [WARN] Erros recentes ($tool):" >&2
+            echo "$summary" | sed 's/^/     /' >&2
+            cat "$err_file" >> "$list_err_log"
+        fi
+    }
+
+    if [[ "${DEBUG_TRACE:-0}" -eq 1 ]]; then
+        err_file="$(mktemp -t list_archive_paths.XXXXXX)"
+        stderr_target="$err_file"
+    fi
 
     case "$kind" in
         zip)
             # zipinfo costuma ser mais “seco”/rápido quando existe (parte do pacote unzip em muitos sistemas)
             if command -v zipinfo >/dev/null 2>&1; then
-                #timeout --foreground 20s zipinfo -1 -- "$file" '*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/[01]' 2>/dev/null || return 1
-                timeout --foreground 20s zipinfo -1 -- "$file" 2>/dev/null || return 1
+                #timeout --foreground "$list_timeout" zipinfo -1 -- "$file" '*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/[01]' 2>/dev/null || return 1
+                if ! timeout --foreground "$list_timeout" zipinfo -1 -- "$file" 2> "$stderr_target"; then
+                    local status=$?
+                    report_list_error "zipinfo" "$status"
+                    [[ -n "$err_file" ]] && rm -f "$err_file"
+                    return 0
+                fi
             else
-                #timeout --foreground 20s unzip -Z1 -- "$file" '*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/[01]' 2>/dev/null || return 1
-                timeout --foreground 20s unzip -Z1 -- "$file" 2>/dev/null || return 1
+                #timeout --foreground "$list_timeout" unzip -Z1 -- "$file" '*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/[01]' 2>/dev/null || return 1
+                if ! timeout --foreground "$list_timeout" unzip -Z1 -- "$file" 2> "$stderr_target"; then
+                    local status=$?
+                    report_list_error "unzip" "$status"
+                    [[ -n "$err_file" ]] && rm -f "$err_file"
+                    return 0
+                fi
             fi
             ;;
         rar)
-            timeout --foreground 20s unrar lb -p- -- "$file" 2>/dev/null || return 1
+            if ! timeout --foreground "$list_timeout" unrar lb -p- -- "$file" 2> "$stderr_target"; then
+                local status=$?
+                report_list_error "unrar" "$status"
+                [[ -n "$err_file" ]] && rm -f "$err_file"
+                return 0
+            fi
             ;;
         tar)
-            timeout --foreground 20s tar -tf --wildcards -- "$file" '*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/[01]' 2>/dev/null || return 1
+            if ! timeout --foreground "$list_timeout" tar -tf --wildcards -- "$file" '*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/[01]' 2> "$stderr_target"; then
+                local status=$?
+                report_list_error "tar" "$status"
+                [[ -n "$err_file" ]] && rm -f "$err_file"
+                return 0
+            fi
             ;;
         7z)
-            timeout --foreground 20s 7z l -slt -p- -y -bsp0 -i!*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/0 -i!*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/1 -- "$file" 2>/dev/null \
+            if ! timeout --foreground "$list_timeout" 7z l -slt -p- -y -bsp0 -i!*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/0 -i!*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/1 -- "$file" 2> "$stderr_target" \
               | awk -F' = ' '/^Path = /{print $2}' \
-              | sed '/^$/d'
+              | sed '/^$/d'; then
+                local status=$?
+                report_list_error "7z" "$status"
+                [[ -n "$err_file" ]] && rm -f "$err_file"
+                return 0
+            fi
             ;;
         *)
             return 1
             ;;
     esac
+
+    [[ -n "$err_file" ]] && rm -f "$err_file"
 }
 # DOC-END: SYNC-FUNC-list_archive_paths
 
