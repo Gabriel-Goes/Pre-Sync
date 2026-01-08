@@ -271,6 +271,7 @@ prepare_archive() {
         *.zip) ARCH_KIND="zip" ;;
         *.rar) ARCH_KIND="rar" ;;
         *.tar) ARCH_KIND="tar" ;;
+		*.7z)  ARCH_KIND="7z"  ;;
         *) return 2 ;;
     esac
     return 0
@@ -281,11 +282,30 @@ prepare_archive() {
 list_archive_paths() {
     local kind="$1"
     local file="$2"
+
     case "$kind" in
-        zip) unzip -Z1 -- "$file" 2>/dev/null ;;
-        rar) unrar lb -p- -- "$file" 2>/dev/null ;;
-        tar) tar -tf -- "$file" 2>/dev/null ;;
-        *) return 1 ;;
+        zip)
+            # zipinfo costuma ser mais “seco”/rápido quando existe (parte do pacote unzip em muitos sistemas)
+            if command -v zipinfo >/dev/null 2>&1; then
+                timeout --foreground 20s zipinfo -1 -- "$file" 2>/dev/null || return 1
+            else
+                timeout --foreground 20s unzip -Z1 -- "$file" 2>/dev/null || return 1
+            fi
+            ;;
+        rar)
+            timeout --foreground 20s unrar lb -p- -- "$file" 2>/dev/null || return 1
+            ;;
+        tar)
+            timeout --foreground 20s tar -tf -- "$file" 2>/dev/null || return 1
+            ;;
+        7z)
+            timeout --foreground 20s 7z l -slt -- "$file" 2>/dev/null \
+              | awk -F' = ' '/^Path = /{print $2}' \
+              | sed '/^$/d'
+            ;;
+        *)
+            return 1
+            ;;
     esac
 }
 # DOC-END: SYNC-FUNC-list_archive_paths
@@ -314,9 +334,8 @@ extract_reftek_dates_any_depth() {
     local codes_pat="$3"   # ex: "9690|AD20"
 
     list_archive_paths "$kind" "$file" | \
-    awk -v codes="$codes_pat" -F'/' '
-        BEGIN {
-            n = split(codes, C, "|")
+    awk -v codes="$codes_pat" -F'[/\\\\]' '
+        BEGIN { n = split(codes, C, "|") }
         }
         function iscode(x){
             for(i=1;i<=n;i++) if(x==C[i]) return 1
@@ -335,7 +354,7 @@ extract_reftek_dates_any_depth() {
                 }
             }
         }
-    ' | sort -u
+    ' | LC_ALL=C sort -u
 }
 # DOC-END: SYNC-FUNC-extract_reftek_dates_any_depth
 
@@ -386,7 +405,7 @@ function encontrar_closest_zip() {
             echo "   - Pastas internas encontradas (bruto):"
             echo "${raw_datas[*]}"
         else
-            echo "   - Sem pastas internas (YYYYJJJ/DAS/[01]) em $arquivo."
+            echo "   - Sem pastas internas (YYYYJJJ/DAS/[0-n]) em $arquivo."
             continue
         fi
 
@@ -427,7 +446,7 @@ function encontrar_closest_zip() {
     done
 
     if [[ -z "$closest_zip" ]]; then
-        echo "[ERRO] Nenhum arquivo adequado encontrado (.zip, .rar ou .tar). Abortando." >&2
+		echo "[ERRO] Nenhum arquivo adequado encontrado (.zip, .zip.bz2, .rar, .tar, .7z). Abortando." >&2
         exit 1
     fi
 
@@ -679,6 +698,7 @@ function processar_reftek() {
         zip) run_cmd unzip -qq "$closest_zip" -d "$target_dir" ;;
         rar) run_cmd mkdir -p "$target_dir"; run_cmd unrar x -inul "$closest_zip" "$target_dir/" ;;
         tar) run_cmd mkdir -p "$target_dir"; run_cmd tar -xf "$closest_zip" -C "$target_dir" ;;
+        7z)  run_cmd mkdir -p "$target_dir"; run_cmd 7z x -y -o"$target_dir" "$closest_zip" >/dev/null ;;
         *) echo "[ERRO] Tipo de arquivo '$ext_zip' não suportado." >&2; exit 1 ;;
     esac
 
@@ -992,7 +1012,14 @@ shift $((OPTIND -1))
 
 # Debug trace (mostra todos os comandos com timestamp)
 if [[ "${DEBUG_TRACE:-0}" -eq 1 ]]; then
-  export PS4='[$(date "+%Y-%m-%d %H:%M:%S")] ${BASH_SOURCE##*/}:${LINENO}:${FUNCNAME[0]:-MAIN}: '
+  # xtrace em arquivo separado (não passa pelo tee do log principal)
+  mkdir -p "$log_dir"
+  exec 9> "$log_dir/${ESTACAO_ESCOLHIDA:-SYNC}_$(date +%Y%m%d_%H%M%S).xtrace"
+  export BASH_XTRACEFD=9
+
+  # evita fork de `date` a cada comando; usa variável builtin do bash (segundos desde epoch)
+  export PS4='[${EPOCHSECONDS}.${EPOCHREALTIME#*.}] ${BASH_SOURCE##*/}:${LINENO}:${FUNCNAME[0]:-MAIN}: '
+
   set -x
 fi
 # DOC-END: SYNC-MAIN-CLI-GETOPTS
