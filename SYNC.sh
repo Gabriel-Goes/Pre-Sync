@@ -299,7 +299,7 @@ list_archive_paths() {
             timeout --foreground 20s tar -tf --wildcards -- "$file" '*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/[01]' 2>/dev/null || return 1
             ;;
         7z)
-            timeout --foreground 20s 7z l -slt -i!*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/0 -i!*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/1 -- "$file" 2>/dev/null \
+            timeout --foreground 20s 7z l -slt -p- -y -bsp0 -i!*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/0 -i!*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/1 -- "$file" 2>/dev/null \
               | awk -F' = ' '/^Path = /{print $2}' \
               | sed '/^$/d'
             ;;
