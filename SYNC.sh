@@ -287,19 +287,19 @@ list_archive_paths() {
         zip)
             # zipinfo costuma ser mais “seco”/rápido quando existe (parte do pacote unzip em muitos sistemas)
             if command -v zipinfo >/dev/null 2>&1; then
-                timeout --foreground 20s zipinfo -1 -- "$file" 2>/dev/null || return 1
+                timeout --foreground 20s zipinfo -1 -- "$file" '*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/[01]' 2>/dev/null || return 1
             else
-                timeout --foreground 20s unzip -Z1 -- "$file" 2>/dev/null || return 1
+                timeout --foreground 20s unzip -Z1 -- "$file" '*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/[01]' 2>/dev/null || return 1
             fi
             ;;
         rar)
             timeout --foreground 20s unrar lb -p- -- "$file" 2>/dev/null || return 1
             ;;
         tar)
-            timeout --foreground 20s tar -tf -- "$file" 2>/dev/null || return 1
+            timeout --foreground 20s tar -tf --wildcards -- "$file" '*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/[01]' 2>/dev/null || return 1
             ;;
         7z)
-            timeout --foreground 20s 7z l -slt -- "$file" 2>/dev/null \
+            timeout --foreground 20s 7z l -slt -i!*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/0 -i!*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9]/*/1 -- "$file" 2>/dev/null \
               | awk -F' = ' '/^Path = /{print $2}' \
               | sed '/^$/d'
             ;;
