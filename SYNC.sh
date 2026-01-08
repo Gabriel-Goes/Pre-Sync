@@ -334,22 +334,29 @@ extract_reftek_dates_any_depth() {
     local codes_pat="$3"   # ex: "9690|AD20"
 
     list_archive_paths "$kind" "$file" | \
-    awk -v codes="$codes_pat" -F'[/\\\\]' '
+    awk -v codes="$codes_pat" '
         BEGIN { n = split(codes, C, "|") }
-        }
+
         function iscode(x){
-            for(i=1;i<=n;i++) if(x==C[i]) return 1
+            for (i=1; i<=n; i++) if (x == C[i]) return 1
             return 0
         }
-        function isdate(x){
-            return (x ~ /^[0-9]{7}([_-].+)?$/)
-        }
-        {
-            if ($1 == ".") { for (k=1;k<NF;k++) $k=$(k+1); NF=NF-1 }
 
-            for(i=1; i<=NF-2; i++){
-                if (isdate($i) && iscode($(i+1)) && ( $(i+2)=="0" || $(i+2)=="1" )) {
-                    print $i
+        {
+            # remove prefixo "./" ou ".\"
+            sub(/^\.[\/\\]/, "", $0)
+
+            # normaliza separador Windows -> Unix
+            gsub(/\\/, "/", $0)
+
+            m = split($0, P, "/")
+
+            for (i=1; i<=m-2; i++) {
+                # aceita YYYYJJJ e também YYYYJJJ_sufixo
+                if (P[i] ~ /^[0-9]{7}/ && iscode(P[i+1]) && (P[i+2] == "0" || P[i+2] == "1")) {
+                    d = P[i]
+                    sub(/[^0-9].*$/, "", d)   # fica só YYYYJJJ
+                    if (d ~ /^[0-9]{7}$/) print d
                     break
                 }
             }
