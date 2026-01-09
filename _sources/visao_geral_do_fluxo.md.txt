@@ -15,7 +15,10 @@ O `SYNC.sh` automatiza:
 3. **Processamento específico por tipo de estação**:
    - **REFTEK RT130**: binário → miniSEED → `dataselect` → `sdsClone.py` → `workthisout.sh`.
    - **Raspberry Shake**: miniSEED → correções (`msmod`) → `dataselect` → `sdsClone.py` → `workthisout.sh`.
-4. **Rastreabilidade e integridade**: log único por execução, renomeado ao final e enriquecido com **MD5** e tamanhos.
+4. **Rastreabilidade e integridade**: log único por execução, renomeado ao final e enriquecido com **md5sum** e tamanhos de arquivos compactados e ./sds/ assim como horários e tempos de execução.
+
+* O script pode ser executado interativamente selecionado um número para a estação desejada, ou inserindo as opções -p para Projeto e -e para Estação;
+* Projeto pode ser modificado para Rede;
 
 ---
 

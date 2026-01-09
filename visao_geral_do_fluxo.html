@@ -221,8 +221,12 @@
 <li><p><strong>Raspberry Shake</strong>: miniSEED → correções (<code class="docutils literal notranslate"><span class="pre">msmod</span></code>) → <code class="docutils literal notranslate"><span class="pre">dataselect</span></code> → <code class="docutils literal notranslate"><span class="pre">sdsClone.py</span></code> → <code class="docutils literal notranslate"><span class="pre">workthisout.sh</span></code>.</p></li>
 </ul>
 </li>
-<li><p><strong>Rastreabilidade e integridade</strong>: log único por execução, renomeado ao final e enriquecido com <strong>MD5</strong> e tamanhos.</p></li>
+<li><p><strong>Rastreabilidade e integridade</strong>: log único por execução, renomeado ao final e enriquecido com <strong>md5sum</strong> e tamanhos de arquivos compactados e ./sds/ assim como horários e tempos de execução.</p></li>
 </ol>
+<ul class="simple">
+<li><p>O script pode ser executado interativamente selecionado um número para a estação desejada, ou inserindo as opções -p para Projeto e -e para Estação;</p></li>
+<li><p>Projeto pode ser modificado para Rede;</p></li>
+</ul>
 </section>
 <hr class="docutils" />
 <section id="regras-globais-de-robustez-e-rastreabilidade">
