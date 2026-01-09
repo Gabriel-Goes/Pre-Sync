@@ -906,7 +906,162 @@ function processar_reftek() {
               exit 1
           fi
       else
-          echo "      • [AVISO] Template de parfile não encontrado em $par_template; prosseguindo sem validação."
+          echo "      • [AVISO] Template de parfile não encontrado em $par_template; iniciando fluxo de primeira execução."
+
+          run_cmd mkdir -p "$PARFILES_DIR"
+
+          run_cmd bash -lc "cd '$target_dir' && PYTHONPATH='$RT2MS_ROOT' python3 -m rt2ms_py3.rt2ms_py3 -d '$CF_ROOT' -X"
+
+          local rtlog_dir="$target_dir/LOGS"
+          local rtlog_file=""
+          if [[ -d "$rtlog_dir" ]]; then
+              rtlog_file="$(ls -t "$rtlog_dir"/RT130_*.log 2>/dev/null | head -n1 || true)"
+          fi
+          if [[ -z "$rtlog_file" ]]; then
+              echo "[ERRO] Log RT130 não encontrado após rt2ms -X em $rtlog_dir." >&2
+              exit 1
+          fi
+
+          declare -A orient_by_name=()
+          local orientation_summary=()
+          local upper_station="${ESTACAO_ESCOLHIDA^^}"
+
+          infer_orientacao_reftek() {
+              local name="$1"
+              local az_raw="$2"
+              local inc_raw="$3"
+              local tol=5
+              local az inc
+              az="$(awk -v v="$az_raw" 'BEGIN{ if (match(v,/[-+]?[0-9]*\\.?[0-9]+/)) print substr(v,RSTART,RLENGTH) }')"
+              inc="$(awk -v v="$inc_raw" 'BEGIN{ if (match(v,/[-+]?[0-9]*\\.?[0-9]+/)) print substr(v,RSTART,RLENGTH) }')"
+
+              local orientation=""
+              if [[ -n "$inc" ]]; then
+                  orientation="$(awk -v inc="$inc" -v az="$az" -v tol="$tol" '
+                      function abs(x){return x<0?-x:x}
+                      BEGIN {
+                          if (abs(inc-0) <= tol) print "Z";
+                          else if (abs(inc-90) <= tol && abs(az-0) <= tol) print "N";
+                          else if (abs(inc-90) <= tol && abs(az-90) <= tol) print "E";
+                      }
+                  ')"
+              fi
+
+              if [[ -z "$orientation" ]]; then
+                  local lower_name
+                  lower_name="$(echo "$name" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
+                  case "$lower_name" in
+                      v* ) orientation="Z" ;;
+                      ns* ) orientation="N" ;;
+                      ew* ) orientation="E" ;;
+                  esac
+              fi
+
+              printf "%s" "$orientation"
+          }
+
+          while IFS=';' read -r name az inc; do
+              local trimmed_name
+              trimmed_name="$(echo "$name" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+              local orientation
+              orientation="$(infer_orientacao_reftek "$trimmed_name" "$az" "$inc")"
+              if [[ -n "$orientation" ]]; then
+                  local key
+                  key="$(echo "$trimmed_name" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
+                  orient_by_name["$key"]="$orientation"
+              fi
+          done < <(
+              awk '
+                  function trim(s){ gsub(/^[ \t]+|[ \t]+$/, "", s); return s }
+                  /Station Channel Definition/ { in=1; name=""; az=""; inc=""; next }
+                  in && /Name[[:space:]]*:/ { sub(/.*Name[[:space:]]*:[[:space:]]*/, "", $0); name=trim($0); next }
+                  in && /Azimuth[[:space:]]*:/ { sub(/.*Azimuth[[:space:]]*:[[:space:]]*/, "", $0); az=trim($0); next }
+                  in && /Inclination[[:space:]]*:/ { sub(/.*Inclination[[:space:]]*:[[:space:]]*/, "", $0); inc=trim($0); next }
+                  in && name != "" && az != "" && inc != "" { print name ";" az ";" inc; in=0 }
+              ' "$rtlog_file"
+          )
+
+          run_cmd cp "$target_dir/parfile.txt" "$par_template"
+          local review_marker="${par_template}.NEEDS_REVIEW"
+          run_cmd touch "$review_marker"
+
+          local orient_map_file
+          orient_map_file="$(mktemp)"
+          for name in "${!orient_by_name[@]}"; do
+              printf "%s %s\n" "$name" "${orient_by_name[$name]}" >> "$orient_map_file"
+          done
+
+          local normalized_tmp
+          normalized_tmp="$(mktemp)"
+          if ! awk -F';' -v OFS='; ' -v sta="$upper_station" -v net="$project_code" '
+              function trim(s){ gsub(/^[ \t]+|[ \t]+$/, "", s); return s }
+              FNR==NR { map[tolower($1)]=$2; next }
+              NR==1 { print $0; next }
+              {
+                  for (i=1;i<=NF;i++) $i = trim($i)
+                  $4 = net
+                  $5 = sta
+                  if ($3 == 1) {
+                      key = tolower($2)
+                      orient = map[key]
+                      if (orient == "") {
+                          if (key ~ /^v/) orient = "Z"
+                          else if (key ~ /^ns/) orient = "N"
+                          else if (key ~ /^ew/) orient = "E"
+                      }
+                      if (orient == "") {
+                          printf("[ERRO] Orientação não inferida para canal %s (refstrm=1)\n", $2) > "/dev/stderr"
+                          erro = 1
+                      }
+                      if (orient == "Z") $7 = "HHZ"
+                      else if (orient == "N") $7 = "HHN"
+                      else if (orient == "E") $7 = "HHE"
+                  }
+                  print $0
+              }
+              END { exit erro }
+          ' "$orient_map_file" "$par_template" > "$normalized_tmp"; then
+              echo "[ERRO] Falha ao normalizar template do parfile." >&2
+              exit 1
+          fi
+
+          run_cmd mv "$normalized_tmp" "$par_template"
+          rm -f "$orient_map_file"
+
+          if (( ${#orient_by_name[@]} > 0 )); then
+              for name in "${!orient_by_name[@]}"; do
+                  orientation_summary+=( "${name}=${orient_by_name[$name]}" )
+              done
+          fi
+
+          local -a ignored_triggers=()
+          mapfile -t ignored_triggers < <(
+              awk -F';' '
+                  function trim(s){ gsub(/^[ \t]+|[ \t]+$/, "", s); return s }
+                  NR>1 {
+                      refchan = trim($2)
+                      refstrm = trim($3)
+                      if (refstrm != 1) print refchan "/" refstrm
+                  }
+              ' "$par_template"
+          )
+
+          echo "      • Template normalizado: netcode=$project_code, station=$upper_station"
+          if (( ${#orientation_summary[@]} )); then
+              printf "      • Orientações inferidas (refstrm=1): %s\n" "${orientation_summary[*]}"
+          else
+              echo "      • [AVISO] Nenhuma orientação inferida a partir do log RT130."
+          fi
+          if (( ${#ignored_triggers[@]} )); then
+              printf "      • Triggers ignorados (refstrm 2/3): %s\n" "${ignored_triggers[*]}"
+          fi
+
+          "${EDITOR:-nvim}" "$par_template"
+
+          if [[ -f "$review_marker" ]]; then
+              echo "[ERRO] Template ainda marcado para revisão: $review_marker" >&2
+              exit 2
+          fi
       fi
 
       outdir="${project_code}.${ESTACAO_ESCOLHIDA}.MSEED"
