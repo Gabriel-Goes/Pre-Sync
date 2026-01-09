@@ -1,0 +1,259 @@
+→ Sincronização iniciada em: 2026-01-09 14:49:36
+
+→ Selecione o Projeto e Estação:
+    8) Projeto: SALTO PILAO     | Estação: SP7 
+    7) Projeto: MACHADINHO      | Estação: MC9 
+    6) Projeto: MACHADINHO      | Estação: BCM2
+    5) Projeto: ITA             | Estação: IT1 
+    4) Projeto: ITA             | Estação: IT9 
+    3) Projeto: PARAIBUNA       | Estação: PRB1
+    2) Projeto: BAESA ENERCAN   | Estação: BC9 
+    1) Projeto: BAESA ENERCAN   | Estação: BC4 
+
+Digite o número correspondente: → Estação BC9 (9690) é do tipo Reftek.
+[2026-01-09 14:49:41] [FORCE] Sincronização forçada: ignorando último dia na SDS.
+→ Sincronização forçada ativa: definido ultimo_sinc=0
+
+→ Analisando arquivo: /home/gabrielgoes/TMP/SYNC/ZIP/BC9/BC9_20251211.zip
+   - Pastas internas encontradas (dia:streams):
+2025300:0,2,1,3 2025301:0,2,1,3 2025302:0,2,1,3 2025303:0,2,1,3 2025304:0,2,1,3 2025305:0,2,1,3 2025306:0,2,1,3 2025307:0,2,1,3 2025308:0,2,1,3 2025309:0,1,3 2025310:0,2,1,3 2025311:0,2,1,3 2025312:0,1,3 2025313:0,2,1,3 2025314:0,2,1,3 2025315:0,2,1,3 2025316:0,2,1,3 2025317:0,2,1,3 2025318:0,2,1,3 2025319:0,2,1,3 2025320:0,1 2025321:0,2,1,3 2025322:0,2,1,3 2025323:0,2,1,3 2025324:0,2,1,3 2025325:0,2,1,3 2025326:0,1,3 2025327:0,2,1,3 2025328:0,2,1,3 2025329:0,2,1,3 2025330:0,2,1,3 2025331:0,2,1,3 2025332:0,2,1,3 2025333:0,2,1,3 2025334:0,2,1,3 2025335:0,2,1,3 2025336:0,2,1,3 2025337:0,2,1,3 2025338:0,2,1,3 2025339:0,2,1,3 2025340:0,2,1,3 2025341:0,2,1,3 2025342:0,2,1,3 2025343:0,2,1,3 2025344:0,1,3 2025345:0,2,1
+   - Datas internas e streams:
+     • 2025300:0,2,1,3
+     • 2025301:0,2,1,3
+     • 2025302:0,2,1,3
+     • 2025303:0,2,1,3
+     • 2025304:0,2,1,3
+     • 2025305:0,2,1,3
+     • 2025306:0,2,1,3
+     • 2025307:0,2,1,3
+     • 2025308:0,2,1,3
+     • 2025309:0,1,3
+     • 2025310:0,2,1,3
+     • 2025311:0,2,1,3
+     • 2025312:0,1,3
+     • 2025313:0,2,1,3
+     • 2025314:0,2,1,3
+     • 2025315:0,2,1,3
+     • 2025316:0,2,1,3
+     • 2025317:0,2,1,3
+     • 2025318:0,2,1,3
+     • 2025319:0,2,1,3
+     • 2025320:0,1
+     • 2025321:0,2,1,3
+     • 2025322:0,2,1,3
+     • 2025323:0,2,1,3
+     • 2025324:0,2,1,3
+     • 2025325:0,2,1,3
+     • 2025326:0,1,3
+     • 2025327:0,2,1,3
+     • 2025328:0,2,1,3
+     • 2025329:0,2,1,3
+     • 2025330:0,2,1,3
+     • 2025331:0,2,1,3
+     • 2025332:0,2,1,3
+     • 2025333:0,2,1,3
+     • 2025334:0,2,1,3
+     • 2025335:0,2,1,3
+     • 2025336:0,2,1,3
+     • 2025337:0,2,1,3
+     • 2025338:0,2,1,3
+     • 2025339:0,2,1,3
+     • 2025340:0,2,1,3
+     • 2025341:0,2,1,3
+     • 2025342:0,2,1,3
+     • 2025343:0,2,1,3
+     • 2025344:0,1,3
+     • 2025345:0,2,1
+   - Primeiro dia novo ≥ 0: 2025300 (diff=300)
+
+→ Analisando arquivo: /home/gabrielgoes/TMP/SYNC/ZIP/BC9/BC9_20251215.7z
+   - Pastas internas encontradas (dia:streams):
+2025300:0,1,2,3 2025301:0,1,2,3 2025302:0,1,2,3 2025303:0,1,2,3 2025304:0,1,2,3 2025305:0,1,2,3 2025306:0,1,2,3 2025307:0,1,2,3 2025308:0,1,2,3 2025309:0,1,3 2025310:0,1,2,3 2025311:0,1,2,3 2025312:0,1,3 2025313:0,1,2,3 2025314:0,1,2,3 2025315:0,1,2,3 2025316:0,1,2,3 2025317:0,1,2,3 2025318:0,1,2,3 2025319:0,1,2,3 2025320:0,1 2025321:0,1,2,3 2025322:0,1,2,3 2025323:0,1,2,3 2025324:0,1,2,3 2025325:0,1,2,3 2025326:0,1,3 2025327:0,1,2,3 2025328:0,1,2,3 2025329:0,1,2,3 2025330:0,1,2,3 2025331:0,1,2,3 2025332:0,1,2,3 2025333:0,1,2,3 2025334:0,1,2,3 2025335:0,1,2,3 2025336:0,1,2,3 2025337:0,1,2,3 2025338:0,1,2,3 2025339:0,1,2,3 2025340:0,1,2,3 2025341:0,1,2,3 2025342:0,1,2,3 2025343:0,1,2,3 2025344:0,1,3 2025345:0,1,2
+   - Datas internas e streams:
+     • 2025300:0,1,2,3
+     • 2025301:0,1,2,3
+     • 2025302:0,1,2,3
+     • 2025303:0,1,2,3
+     • 2025304:0,1,2,3
+     • 2025305:0,1,2,3
+     • 2025306:0,1,2,3
+     • 2025307:0,1,2,3
+     • 2025308:0,1,2,3
+     • 2025309:0,1,3
+     • 2025310:0,1,2,3
+     • 2025311:0,1,2,3
+     • 2025312:0,1,3
+     • 2025313:0,1,2,3
+     • 2025314:0,1,2,3
+     • 2025315:0,1,2,3
+     • 2025316:0,1,2,3
+     • 2025317:0,1,2,3
+     • 2025318:0,1,2,3
+     • 2025319:0,1,2,3
+     • 2025320:0,1
+     • 2025321:0,1,2,3
+     • 2025322:0,1,2,3
+     • 2025323:0,1,2,3
+     • 2025324:0,1,2,3
+     • 2025325:0,1,2,3
+     • 2025326:0,1,3
+     • 2025327:0,1,2,3
+     • 2025328:0,1,2,3
+     • 2025329:0,1,2,3
+     • 2025330:0,1,2,3
+     • 2025331:0,1,2,3
+     • 2025332:0,1,2,3
+     • 2025333:0,1,2,3
+     • 2025334:0,1,2,3
+     • 2025335:0,1,2,3
+     • 2025336:0,1,2,3
+     • 2025337:0,1,2,3
+     • 2025338:0,1,2,3
+     • 2025339:0,1,2,3
+     • 2025340:0,1,2,3
+     • 2025341:0,1,2,3
+     • 2025342:0,1,2,3
+     • 2025343:0,1,2,3
+     • 2025344:0,1,3
+     • 2025345:0,1,2
+   - Primeiro dia novo ≥ 0: 2025300 (diff=300)
+
+###############################################
+→ ARQUIVO ESCOLHIDO PARA SINCRONIZAÇÃO:
+     • Arquivo:      /home/gabrielgoes/TMP/SYNC/ZIP/BC9/BC9_20251211.zip
+     • Primeiro dia: 2025300 - 2025-10-27
+     • Último dia:   2025345 - 2025-12-11
+     • Streams por dia:
+       - 2025300:0,2,1,3
+       - 2025301:0,2,1,3
+       - 2025302:0,2,1,3
+       - 2025303:0,2,1,3
+       - 2025304:0,2,1,3
+       - 2025305:0,2,1,3
+       - 2025306:0,2,1,3
+       - 2025307:0,2,1,3
+       - 2025308:0,2,1,3
+       - 2025309:0,1,3
+       - 2025310:0,2,1,3
+       - 2025311:0,2,1,3
+       - 2025312:0,1,3
+       - 2025313:0,2,1,3
+       - 2025314:0,2,1,3
+       - 2025315:0,2,1,3
+       - 2025316:0,2,1,3
+       - 2025317:0,2,1,3
+       - 2025318:0,2,1,3
+       - 2025319:0,2,1,3
+       - 2025320:0,1
+       - 2025321:0,2,1,3
+       - 2025322:0,2,1,3
+       - 2025323:0,2,1,3
+       - 2025324:0,2,1,3
+       - 2025325:0,2,1,3
+       - 2025326:0,1,3
+       - 2025327:0,2,1,3
+       - 2025328:0,2,1,3
+       - 2025329:0,2,1,3
+       - 2025330:0,2,1,3
+       - 2025331:0,2,1,3
+       - 2025332:0,2,1,3
+       - 2025333:0,2,1,3
+       - 2025334:0,2,1,3
+       - 2025335:0,2,1,3
+       - 2025336:0,2,1,3
+       - 2025337:0,2,1,3
+       - 2025338:0,2,1,3
+       - 2025339:0,2,1,3
+       - 2025340:0,2,1,3
+       - 2025341:0,2,1,3
+       - 2025342:0,2,1,3
+       - 2025343:0,2,1,3
+       - 2025344:0,1,3
+       - 2025345:0,2,1
+###############################################
+
+→ Iniciando processamento REFTEK para estação BC9
+   - Criado diretório de binários: /home/gabrielgoes/TMP/SYNC/BC9_20251211/BC9_20251211_BINARIES
+   - Descompactando /home/gabrielgoes/TMP/SYNC/ZIP/BC9/BC9_20251211.zip → /home/gabrielgoes/TMP/SYNC/BC9_20251211 ...
+   - Movendo apenas a partir de YYYYJJJ/DASCODE/ para o BINARIES...
+   - Todos os diretórios YYYYJJJ/DASCODE foram movidos para BINARIES.
+   - Verificando integridade horária...
+      • BORDA DE COLETA: /home/gabrielgoes/TMP/SYNC/BC9_20251211/BC9_20251211_BINARIES/2025345/9690/1
+      • BORDA DE COLETA: /home/gabrielgoes/TMP/SYNC/BC9_20251211/BC9_20251211_BINARIES/2025300/9690/1
+   - Extraindo informações de GPS/BATTERY/TEMP...
+      • GPS e BATTERY extraídos e ordenados:
+         - /home/gabrielgoes/TMP/SYNC/BC9_20251211/BC9_20251211.gps
+         - /home/gabrielgoes/TMP/SYNC/BC9_20251211/BC9_20251211.battery
+   - Convertendo para MSEED (rt2ms_py3) e enviando ao SDS...
+2026-01-09 14:50:22 - INFO - rt2ms program starting
+2026-01-09 14:50:22 - INFO - Version: 2023.4.2.0
+2026-01-09 14:50:22 - INFO - Generating parameter file using rt2ms in 'exploratory mode'!
+2026-01-09 14:50:22 - INFO - Gathering parfile information for cf_card_dir: '/home/gabrielgoes/TMP/SYNC/BC9_20251211/BC9_20251211_BINARIES'
+2026-01-09 14:50:23 - INFO - Invalid network code (netcode = ). The network code should be two alphanumeric character long. Setting network code to default one (XX).
+2026-01-09 14:50:23 - INFO - Invalid channel name found contv. Based on a sampling rate of 100 Hz and a gain of 1, renaming channel as HHZ. Please, make sure this is correct!
+2026-01-09 14:50:23 - INFO - Invalid network code (netcode = ). The network code should be two alphanumeric character long. Setting network code to default one (XX).
+2026-01-09 14:50:23 - INFO - Invalid channel name found contns. Based on a sampling rate of 100 Hz and a gain of 1, renaming channel as HH1. Please, make sure this is correct!
+2026-01-09 14:50:23 - INFO - Invalid network code (netcode = ). The network code should be two alphanumeric character long. Setting network code to default one (XX).
+2026-01-09 14:50:23 - INFO - Invalid channel name found contew. Based on a sampling rate of 100 Hz and a gain of 1, renaming channel as HH2. Please, make sure this is correct!
+2026-01-09 14:50:23 - INFO - Invalid network code (netcode = ). The network code should be two alphanumeric character long. Setting network code to default one (XX).
+2026-01-09 14:50:23 - INFO - Invalid channel name found regv. Based on a sampling rate of 100 Hz and a gain of 1, renaming channel as HHZ. Please, make sure this is correct!
+2026-01-09 14:50:23 - INFO - Invalid network code (netcode = ). The network code should be two alphanumeric character long. Setting network code to default one (XX).
+2026-01-09 14:50:23 - INFO - Invalid channel name found regns. Based on a sampling rate of 100 Hz and a gain of 1, renaming channel as HH1. Please, make sure this is correct!
+2026-01-09 14:50:23 - INFO - Invalid network code (netcode = ). The network code should be two alphanumeric character long. Setting network code to default one (XX).
+2026-01-09 14:50:23 - INFO - Invalid channel name found regew. Based on a sampling rate of 100 Hz and a gain of 1, renaming channel as HH2. Please, make sure this is correct!
+2026-01-09 14:50:23 - INFO - Invalid network code (netcode = ). The network code should be two alphanumeric character long. Setting network code to default one (XX).
+2026-01-09 14:50:23 - INFO - Invalid channel name found locv. Based on a sampling rate of 100 Hz and a gain of 1, renaming channel as HHZ. Please, make sure this is correct!
+2026-01-09 14:50:23 - INFO - Invalid network code (netcode = ). The network code should be two alphanumeric character long. Setting network code to default one (XX).
+2026-01-09 14:50:23 - INFO - Invalid channel name found locns. Based on a sampling rate of 100 Hz and a gain of 1, renaming channel as HH1. Please, make sure this is correct!
+2026-01-09 14:50:23 - INFO - Invalid network code (netcode = ). The network code should be two alphanumeric character long. Setting network code to default one (XX).
+2026-01-09 14:50:23 - INFO - Invalid channel name found locew. Based on a sampling rate of 100 Hz and a gain of 1, renaming channel as HH2. Please, make sure this is correct!
+2026-01-09 14:50:23 - INFO - Writing parameter file in dir: '/var/WORKTMP/SYNC/BC9_20251211' 
+2026-01-09 14:50:23 - INFO - Parameter file:
+das; refchan; refstrm; netcode; station; location; channel; samplerate; gain; implement_time
+9690; 1; 1; XX; bc9; ; HHZ; 100; 1; 2016-06-23T16:55:40.000000Z
+9690; 2; 1; XX; bc9; ; HH1; 100; 1; 2016-06-23T16:55:40.000000Z
+9690; 3; 1; XX; bc9; ; HH2; 100; 1; 2016-06-23T16:55:40.000000Z
+9690; 1; 2; XX; bc9; ; HHZ; 100; 1; 2016-06-23T16:55:40.000000Z
+9690; 2; 2; XX; bc9; ; HH1; 100; 1; 2016-06-23T16:55:40.000000Z
+9690; 3; 2; XX; bc9; ; HH2; 100; 1; 2016-06-23T16:55:40.000000Z
+9690; 1; 3; XX; bc9; ; HHZ; 100; 1; 2016-06-23T16:55:40.000000Z
+9690; 2; 3; XX; bc9; ; HH1; 100; 1; 2016-06-23T16:55:40.000000Z
+9690; 3; 3; XX; bc9; ; HH2; 100; 1; 2016-06-23T16:55:40.000000Z
+2026-01-09 14:50:23 - WARNING - !!! Review and if necessary edit the generated parameter file before running rt2ms in 'conversion' mode !!!
+      • Substituições automáticas detectadas pelo rt2ms (modo exploratório):
+         - NETCODE: "" → "XX"
+         - CHANNEL: "contv" → "HHZ"
+         - NETCODE: "" → "XX"
+         - CHANNEL: "contns" → "HH1"
+         - NETCODE: "" → "XX"
+         - CHANNEL: "contew" → "HH2"
+         - NETCODE: "" → "XX"
+         - CHANNEL: "regv" → "HHZ"
+         - NETCODE: "" → "XX"
+         - CHANNEL: "regns" → "HH1"
+         - NETCODE: "" → "XX"
+         - CHANNEL: "regew" → "HH2"
+         - NETCODE: "" → "XX"
+         - CHANNEL: "locv" → "HHZ"
+         - NETCODE: "" → "XX"
+         - CHANNEL: "locns" → "HH1"
+         - NETCODE: "" → "XX"
+         - CHANNEL: "locew" → "HH2"
+      • [AVISO] Template de parfile não encontrado em /home/gabrielgoes/TMP/SYNC/PARFILES//BC9_parfile.txt; prosseguindo sem validação.
+2026-01-09 14:50:24 - INFO - rt2ms program starting
+2026-01-09 14:50:24 - INFO - Version: 2023.4.2.0
+2026-01-09 14:50:24 - ERROR - This parameter file '/home/gabrielgoes/TMP/SYNC/PARFILES//BC9_parfile.txt' does not exist!
+[2026-01-09 14:50:24] [ERROR] Comando 'bash -lc cd '/home/gabrielgoes/TMP/SYNC/BC9_20251211' && PYTHONPATH='/home/gabrielgoes/TMP/SYNC/python/rt2ms_py3' python3 -m rt2ms_py3.rt2ms_py3 -d '/home/gabrielgoes/TMP/SYNC/BC9_20251211/BC9_20251211_BINARIES' -p '/home/gabrielgoes/TMP/SYNC/PARFILES//BC9_parfile.txt' -o 'BC.BC9.MSEED'' retornou 0.
+[2026-01-09 14:50:24] [ERROR] Comando 'bash -lc cd '/home/gabrielgoes/TMP/SYNC/BC9_20251211' && PYTHONPATH='/home/gabrielgoes/TMP/SYNC/python/rt2ms_py3' python3 -m rt2ms_py3.rt2ms_py3 -d '/home/gabrielgoes/TMP/SYNC/BC9_20251211/BC9_20251211_BINARIES' -p '/home/gabrielgoes/TMP/SYNC/PARFILES//BC9_parfile.txt' -o 'BC.BC9.MSEED'' retornou 0.
+ERROR: No input files were specified
+
+dataselect version 4.2.1
+
+Try dataselect -h for usage
+No sds folder found
+→ Processamento REFTEK concluído.
+→ MD5 do BC9_20251211.zip: 00414a4ea1dc33721959aced169a3d33
+→ Tamanho do ZIP: 694M
+→ Tamanho do SDS: NA
+→ Log sincronização renomeado para: /home/gabrielgoes/TMP/SYNC/LOGS/BC9_20251211_1450_sync.log
+→ Sincronização concluída em: 2026-01-09 14:50:29
