@@ -535,17 +535,20 @@ Etapas principais:
    - modo exploratório `-e` para gerar `parfile.txt` + `rt2ms.msg`
    - valida `parfile.txt` contra template (se existir)
    - **primeira execução sem template**:
+     - `rt2ms -e` gera `parfile.txt` com os parâmetros iniciais
      - cria `PARFILES/` e copia `parfile.txt` para `PARFILES/<ESTACAO>_parfile.txt`
-     - executa `rt2ms -X` para gerar o log RT130 em `target_dir/LOGS/RT130_*.log`
+     - executa `rt2ms -X` para gerar o log RT130 em `target_dir/LOGS/RT130_*.log` (base para inferência de orientação)
      - infere orientação dos canais via blocos *Station Channel Definition* (Name/Azimuth/Inclination),
        com fallback por nome (`v`→Z, `ns`→N, `ew`→E)
      - normaliza `station`/`netcode` e ajusta `channel` apenas para `refstrm=1` (HHZ/HHN/HHE)
-     - abre o template no editor e exige remoção do marcador `.NEEDS_REVIEW` para seguir o fluxo
+     - template padrão inclui somente `refstrm=1` (streams 2/3 são ignorados por padrão)
+     - cria o template com marcador `.NEEDS_REVIEW`, abre no editor e só continua no mesmo run após remover o marcador
    - conversão final com `-p template -o <NET>.<ESTACAO>.MSEED`
 7. **Publicação em SDS local** e pipeline SeisComP:
    - `dataselect` (constrói `target_dir/sds`)
    - `sdsClone.py` (gera log de clone)
    - `workthisout.sh --nostop` (publishes/organiza)
+   - envio ao SDS segue restrito a `*..HH?.*`
 
 Saída operacional: SDS pronta em `target_dir/sds/`, logs prontos para consolidação em `finalizar_log`.
 
