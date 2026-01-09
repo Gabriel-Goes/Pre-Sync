@@ -1028,6 +1028,22 @@ function processar_reftek() {
           run_cmd mv "$normalized_tmp" "$par_template"
           rm -f "$orient_map_file"
 
+          local minimal_tmp
+          minimal_tmp="$(mktemp)"
+          if ! awk -F';' -v OFS='; ' '
+              function trim(s){ gsub(/^[ \t]+|[ \t]+$/, "", s); return s }
+              NR==1 { print $0; next }
+              {
+                  refchan = trim($2)
+                  refstrm = trim($3)
+                  if (refstrm == 1 && (refchan == 1 || refchan == 2 || refchan == 3)) print $0
+              }
+          ' "$par_template" > "$minimal_tmp"; then
+              echo "[ERRO] Falha ao reduzir template do parfile." >&2
+              exit 1
+          fi
+          run_cmd mv "$minimal_tmp" "$par_template"
+
           if (( ${#orient_by_name[@]} > 0 )); then
               for name in "${!orient_by_name[@]}"; do
                   orientation_summary+=( "${name}=${orient_by_name[$name]}" )
@@ -1063,6 +1079,16 @@ function processar_reftek() {
               exit 2
           fi
       fi
+
+      local skipped_streams_dir="$target_dir/_SKIPPED_STREAMS"
+      run_cmd mkdir -p "$skipped_streams_dir"
+      local stream_dir
+      while IFS= read -r stream_dir; do
+          local rel_path="${stream_dir#"$binary_dir/"}"
+          local stash_path="$skipped_streams_dir/$rel_path"
+          run_cmd mkdir -p "$(dirname "$stash_path")"
+          run_cmd mv "$stream_dir" "$stash_path"
+      done < <(find "$binary_dir" -mindepth 3 -maxdepth 3 -type d \( -name 2 -o -name 3 \))
 
       outdir="${project_code}.${ESTACAO_ESCOLHIDA}.MSEED"
       run_cmd bash -lc "cd '$target_dir' && PYTHONPATH='$RT2MS_ROOT' python3 -m rt2ms_py3.rt2ms_py3 -d '$CF_ROOT' -p '$par_template' -o '$outdir'"
