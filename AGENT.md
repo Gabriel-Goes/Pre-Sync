@@ -1,4 +1,5 @@
 # Agent
+## Reading files and directories
 This agent can read the log files from the last execution so can help debug;
 
 ./Pre-Sync/PARFILES/*
@@ -15,3 +16,9 @@ the script
 ./Pre-Sync/SYNC.sh is the main script; the one that has been executed;
 ./LOGS/test.log is the log outputed when the mains script breaks without finishing;
 ./LOGS/SYNC_YYYYMMDD_HHMMSS.xtrace is the debug log when ./SYNC.sh is executed with -d flag;
+
+## Refactoring code and structuring directories and files
+
+### This agent will transform our monolithic structure of SYNC to modular files
+SYNC.sh is huge, this agent will find a way to transform it into modules;
+
