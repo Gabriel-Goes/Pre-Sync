@@ -898,14 +898,9 @@ function processar_reftek() {
       resumir_auto_substituicoes_parfile "$msg_file"
 
       par_template="$PARFILES_DIR/${ESTACAO_ESCOLHIDA}_parfile.txt"
-      if [[ -f "$par_template" ]]; then
-          echo "      • Validando parfile.txt contra template: $par_template"
-          if ! comparar_parfiles_com_tolerancia "$par_template" "$target_dir/parfile.txt"; then
-              echo
-              echo "[ERRO] O parfile gerado (parfile.txt) difere do template padrão fora dos limites permitidos." >&2
-              exit 1
-          fi
-      else
+      local review_marker="${par_template}.NEEDS_REVIEW"
+
+      bootstrap_parfile_template() {
           echo "      • [AVISO] Template de parfile não encontrado em $par_template; iniciando fluxo de primeira execução."
 
           run_cmd mkdir -p "$PARFILES_DIR"
@@ -982,7 +977,6 @@ function processar_reftek() {
           )
 
           run_cmd cp "$target_dir/parfile.txt" "$par_template"
-          local review_marker="${par_template}.NEEDS_REVIEW"
           run_cmd touch "$review_marker"
 
           local orient_map_file
@@ -1043,6 +1037,17 @@ function processar_reftek() {
               exit 1
           fi
           run_cmd mv "$minimal_tmp" "$par_template"
+      }
+
+      if [[ -f "$par_template" ]]; then
+          echo "      • Validando parfile.txt contra template: $par_template"
+          if ! comparar_parfiles_com_tolerancia "$par_template" "$target_dir/parfile.txt"; then
+              echo
+              echo "[ERRO] O parfile gerado (parfile.txt) difere do template padrão fora dos limites permitidos." >&2
+              exit 1
+          fi
+      else
+          bootstrap_parfile_template
 
           if (( ${#orient_by_name[@]} > 0 )); then
               for name in "${!orient_by_name[@]}"; do
@@ -1073,11 +1078,6 @@ function processar_reftek() {
           fi
 
           "${EDITOR:-nvim}" "$par_template"
-
-          if [[ -f "$review_marker" ]]; then
-              echo "[ERRO] Template ainda marcado para revisão: $review_marker" >&2
-              exit 2
-          fi
       fi
 
       local skipped_streams_dir="$target_dir/_SKIPPED_STREAMS"
@@ -1089,6 +1089,16 @@ function processar_reftek() {
           run_cmd mkdir -p "$(dirname "$stash_path")"
           run_cmd mv "$stream_dir" "$stash_path"
       done < <(find "$binary_dir" -mindepth 3 -maxdepth 3 -type d \( -name 2 -o -name 3 \))
+
+      if [[ ! -f "$par_template" ]]; then
+          bootstrap_parfile_template
+          "${EDITOR:-nvim}" "$par_template"
+      fi
+
+      if [[ -f "$review_marker" ]]; then
+          echo "[ERRO] Template marcado para revisão: $review_marker. Revise e remova o marcador antes de continuar." >&2
+          exit 2
+      fi
 
       outdir="${project_code}.${ESTACAO_ESCOLHIDA}.MSEED"
       run_cmd bash -lc "cd '$target_dir' && PYTHONPATH='$RT2MS_ROOT' python3 -m rt2ms_py3.rt2ms_py3 -d '$CF_ROOT' -p '$par_template' -o '$outdir'"
