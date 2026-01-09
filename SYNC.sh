@@ -901,6 +901,8 @@ function processar_reftek() {
       local review_marker="${par_template}.NEEDS_REVIEW"
 
 
+	  local -a orientation_summary=()
+
       bootstrap_parfile_template() {
       	echo "      • [AVISO] Template de parfile não encontrado em $par_template; iniciando fluxo de primeira execução."
 
@@ -920,7 +922,6 @@ function processar_reftek() {
 
       	# Mapa correto: refchan (1/2/3) -> orientação (Z/N/E)
       	declare -A orient_by_refchan=()
-      	local orientation_summary=()
       	local upper_station="${ESTACAO_ESCOLHIDA^^}"
 
       	infer_orientacao_reftek() {
@@ -1112,12 +1113,6 @@ function processar_reftek() {
           fi
       else
           bootstrap_parfile_template
-
-          if (( ${#orient_by_name[@]} > 0 )); then
-              for name in "${!orient_by_name[@]}"; do
-                  orientation_summary+=( "${name}=${orient_by_name[$name]}" )
-              done
-          fi
 
           local -a ignored_triggers=()
           mapfile -t ignored_triggers < <(
