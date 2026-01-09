@@ -22,3 +22,17 @@ the script
 ### This agent will transform our monolithic structure of SYNC to modular files
 SYNC.sh is huge, this agent will find a way to transform it into modules;
 
+## Refactor:
+this local variables are breaking our code, its too huge so i cant maintain, we need to decompose the monolithic structure into modular one;
+
+read the SYNC.sh file and plan a way to split into modules;
+
+we can think using python instead bash if its faster, or concise, we are using bash because workthisout uses bash, but it calls a lot of python code;
+
+workthisout.sh is inside ./source/
+
+workthisout.sh is the main script of our SYNC.sh function, everything we are doing if to make the terrain to execute workthisout with --luke mode and sincronize our ./sds/ to the server /SDS/ and then use index.sh to start analyzing our data;
+
+The code can be simplified, even in bash;
+
+
